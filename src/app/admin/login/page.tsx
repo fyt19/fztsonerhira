@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 
 export default function AdminLoginPage() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100 p-6">
+    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-off-white to-gray-50 p-6">
       <LoginForm />
     </div>
   );

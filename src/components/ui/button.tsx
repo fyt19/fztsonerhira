@@ -4,16 +4,16 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full text-sm font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500/50 disabled:pointer-events-none disabled:opacity-50",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full text-sm font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary/50 disabled:pointer-events-none disabled:opacity-50",
   {
     variants: {
       variant: {
-        default: "bg-navy-900 text-white shadow-md hover:bg-navy-800",
-        teal: "bg-teal-600 text-white shadow-md hover:bg-teal-700",
+        default: "bg-primary-dark text-white shadow-md shadow-primary-dark/20 hover:bg-navy-800",
+        teal: "bg-primary text-white shadow-md shadow-primary/25 hover:bg-primary-dark",
         outline:
-          "border border-slate-200 bg-white text-navy-900 hover:border-teal-200 hover:bg-teal-50/50",
-        ghost: "text-slate-600 hover:bg-slate-100 hover:text-navy-900",
-        destructive: "bg-red-600 text-white hover:bg-red-700",
+          "border border-gray-100 bg-white text-gray-800 hover:border-accent-soft hover:bg-primary-light/60",
+        ghost: "text-gray-600 hover:bg-gray-50 hover:text-gray-800",
+        destructive: "bg-error text-white hover:bg-error/90",
       },
       size: {
         default: "h-11 px-6 py-2",

@@ -11,7 +11,7 @@ export function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="border-t border-slate-200 bg-navy-950 text-slate-300">
+    <footer className="border-t border-gray-100 bg-gray-900 text-gray-200">
       <div className="mx-auto max-w-7xl px-6 py-16 lg:px-8">
         <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-4">
           {/* Brand */}
@@ -21,14 +21,14 @@ export function Footer() {
               className="mb-4 flex items-center gap-2.5"
               aria-label={`${siteConfig.name} ana sayfa`}
             >
-              <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-teal-600 text-white">
+              <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary text-white">
                 <Activity className="h-4 w-4" aria-hidden="true" />
               </span>
               <span className="font-serif text-lg font-semibold text-white">
                 {siteConfig.name}
               </span>
             </Link>
-            <p className="text-sm leading-relaxed text-slate-400">
+            <p className="text-sm leading-relaxed text-gray-400">
               Ankara&apos;da güvenilir, profesyonel ve etik standartlara uygun
               fizik tedavi ve rehabilitasyon hizmetleri.
             </p>
@@ -44,7 +44,7 @@ export function Footer() {
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-sm transition-colors hover:text-teal-400"
+                    className="text-sm transition-colors hover:text-accent"
                   >
                     {link.label}
                   </Link>
@@ -62,23 +62,23 @@ export function Footer() {
               <li>
                 <a
                   href={`tel:${siteConfig.phoneRaw}`}
-                  className="flex items-center gap-2 transition-colors hover:text-teal-400"
+                  className="flex items-center gap-2 transition-colors hover:text-accent"
                 >
-                  <Phone className="h-4 w-4 shrink-0 text-teal-500" aria-hidden="true" />
+                  <Phone className="h-4 w-4 shrink-0 text-secondary" aria-hidden="true" />
                   {siteConfig.phone}
                 </a>
               </li>
               <li>
                 <a
                   href={`mailto:${siteConfig.email}`}
-                  className="flex items-center gap-2 transition-colors hover:text-teal-400"
+                  className="flex items-center gap-2 transition-colors hover:text-accent"
                 >
-                  <Mail className="h-4 w-4 shrink-0 text-teal-500" aria-hidden="true" />
+                  <Mail className="h-4 w-4 shrink-0 text-secondary" aria-hidden="true" />
                   {siteConfig.email}
                 </a>
               </li>
               <li className="flex items-start gap-2">
-                <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-teal-500" aria-hidden="true" />
+                <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-secondary" aria-hidden="true" />
                 <address className="not-italic">
                   {siteConfig.address.street}
                   <br />
@@ -93,7 +93,7 @@ export function Footer() {
             <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-white">
               Çalışma Saatleri
             </h3>
-            <ul className="space-y-2 text-sm text-slate-400">
+            <ul className="space-y-2 text-sm text-gray-400">
               <li>Pazartesi – Cuma: 09:00 – 18:00</li>
               <li>Cumartesi: 09:00 – 14:00</li>
               <li>Pazar: Kapalı</li>
@@ -101,7 +101,7 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="mt-12 border-t border-slate-800 pt-10">
+        <div className="mt-12 border-t border-gray-800 pt-10">
           <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-white">
             Ankara Hizmet Bölgeleri
           </h3>
@@ -110,25 +110,25 @@ export function Footer() {
               <Link
                 key={area.slug}
                 href={`/ankara/${area.slug}`}
-                className="rounded-full border border-slate-700 px-3 py-1 text-xs text-slate-400 transition-colors hover:border-teal-600 hover:text-teal-400"
+                className="rounded-full border border-gray-700 px-3 py-1 text-xs text-gray-400 transition-colors hover:border-primary hover:text-accent"
               >
                 {area.name} Fizyoterapist
               </Link>
             ))}
             <Link
               href="/ankara"
-              className="rounded-full border border-teal-700 bg-teal-900/30 px-3 py-1 text-xs text-teal-400"
+              className="rounded-full border border-primary bg-primary/20 px-3 py-1 text-xs text-accent"
             >
               Tüm Bölgeler →
             </Link>
           </div>
         </div>
 
-        <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-slate-800 pt-8 sm:flex-row">
-          <p className="text-sm text-slate-500">
+        <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-gray-800 pt-8 sm:flex-row">
+          <p className="text-sm text-gray-500">
             &copy; {currentYear} {siteConfig.name}. Tüm hakları saklıdır.
           </p>
-          <p className="text-xs text-slate-600">
+          <p className="text-xs text-gray-600">
             Ankara Fizyoterapist · Fizik Tedavi ve Rehabilitasyon
           </p>
         </div>

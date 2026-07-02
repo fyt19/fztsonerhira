@@ -269,7 +269,7 @@ export function WhatsAppWidget() {
 
         {/* Floating pill: WhatsApp icon = direct link, text = open assistant */}
         <motion.div
-          className="flex h-14 items-center overflow-hidden rounded-full bg-navy-900 text-white shadow-xl shadow-navy-900/25"
+          className="flex h-14 items-center overflow-hidden rounded-full bg-primary-dark text-white shadow-xl shadow-primary-dark/25"
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
         >

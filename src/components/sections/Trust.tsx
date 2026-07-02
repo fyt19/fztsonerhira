@@ -17,7 +17,7 @@ export function Trust() {
   return (
     <section
       id="neden-biz"
-      className="relative overflow-hidden bg-navy-900 py-20 lg:py-28"
+      className="relative overflow-hidden bg-primary-dark py-20 lg:py-28"
       aria-labelledby="trust-heading"
     >
       <div className="pointer-events-none absolute inset-0 opacity-20">
@@ -28,7 +28,7 @@ export function Trust() {
           className="object-cover"
           aria-hidden="true"
         />
-        <div className="absolute inset-0 bg-navy-900/85" />
+        <div className="absolute inset-0 bg-primary-dark/85" />
       </div>
 
       <div className="relative mx-auto max-w-7xl px-6 lg:px-8">

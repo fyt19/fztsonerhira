@@ -30,7 +30,7 @@ export function Header() {
     <header
       className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
         isScrolled
-          ? "bg-white/90 shadow-sm shadow-navy-900/5 backdrop-blur-md"
+          ? "bg-white/90 shadow-sm shadow-primary-dark/5 backdrop-blur-md"
           : "bg-transparent"
       }`}
     >
@@ -40,10 +40,10 @@ export function Header() {
           className="group flex items-center gap-2.5"
           aria-label={`${siteConfig.name} ana sayfa`}
         >
-          <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-teal-600 text-white shadow-md shadow-teal-600/25 transition-transform group-hover:scale-105">
+          <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary text-white shadow-md shadow-primary/25 transition-transform group-hover:scale-105">
             <Activity className="h-5 w-5" aria-hidden="true" />
           </span>
-          <span className="font-serif text-xl font-semibold text-navy-900">
+          <span className="font-serif text-xl font-semibold text-gray-800">
             {siteConfig.name}
           </span>
         </Link>
@@ -54,10 +54,10 @@ export function Header() {
             <Link
               key={link.href}
               href={link.href}
-              className={`text-sm font-medium transition-colors hover:text-teal-600 ${
+              className={`text-sm font-medium transition-colors hover:text-primary ${
                 pathname === link.href
-                  ? "text-teal-600"
-                  : "text-slate-600"
+                  ? "text-primary"
+                  : "text-gray-600"
               }`}
             >
               {link.label}
@@ -65,7 +65,7 @@ export function Header() {
           ))}
           <Link
             href="/randevu"
-            className="rounded-full bg-navy-900 px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-navy-900/20 transition-all hover:bg-navy-800 hover:shadow-lg"
+            className="rounded-full bg-primary-dark px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-primary-dark/20 transition-all hover:bg-navy-800 hover:shadow-lg"
           >
             Randevu Al
           </Link>
