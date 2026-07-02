@@ -6,9 +6,10 @@ const u = (id: string, w = 1200) =>
   `https://images.unsplash.com/${id}?w=${w}&q=80&auto=format&fit=crop`;
 
 export const images = {
-  /** Ana sayfa hero / slider görseli */
+  /** Ana sayfa hero / slider görselleri */
   hero: "/images/slider-soner.png",
   slider: "/images/slider-soner.png",
+  sliderAlt: "/images/slider.png",
   portrait: "/images/slider-soner.png",
   clinic: u("photo-1519494024563-4f70378a4fd2", 1600),
   blogDefault: u("photo-1576091160399-112ba8d25d1d", 1200),
@@ -26,6 +27,17 @@ export const images = {
     etik: u("photo-1582750431439-352cc7478e3e", 800),
   },
 } as const;
+
+export const heroSlides = [
+  {
+    src: "/images/slider-soner.png",
+    alt: "Soner Hıra — Fizyoterapist",
+  },
+  {
+    src: "/images/slider.png",
+    alt: "Soner Hıra — Klinik portre",
+  },
+] as const;
 
 export function getServiceImage(serviceId: string): string {
   return (

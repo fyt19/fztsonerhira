@@ -1,10 +1,9 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { motion, useReducedMotion } from "framer-motion";
 import { Activity, Clock } from "lucide-react";
-import { images } from "@/lib/images";
+import { HeroImageSlider } from "@/components/sections/HeroImageSlider";
 
 const stats = [
   { value: "10+", label: "Yıllık Deneyim" },
@@ -103,26 +102,8 @@ export function Hero() {
           transition={{ duration: 0.9, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
           className="relative mx-auto w-full max-w-md lg:max-w-none"
         >
-          {/* Main portrait card */}
-          <div className="relative mx-auto aspect-[4/5] w-full max-w-sm overflow-hidden rounded-[2rem] bg-white shadow-[0_24px_64px_-12px_rgba(43,124,184,0.18)] ring-1 ring-white/80 lg:max-w-md">
-            <Image
-              src={images.slider}
-              alt="Soner Hıra — Fizyoterapist"
-              fill
-              priority
-              sizes="(max-width: 1024px) 90vw, 45vw"
-              className="object-cover object-top"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-primary-dark/20 via-transparent to-primary-light/10" />
-
-            {/* Name overlay at bottom */}
-            <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-white/95 via-white/80 to-transparent px-6 pb-6 pt-16 text-center">
-              <p className="font-serif text-xl font-semibold text-primary">
-                Soner Hıra
-              </p>
-              <p className="mt-0.5 text-sm text-gray-600">Fizyoterapist</p>
-            </div>
-          </div>
+          {/* Main portrait slider */}
+          <HeroImageSlider />
 
           {/* Floating — recovery rate */}
           <motion.div
