@@ -8,6 +8,7 @@ import {
   FileText,
   LogOut,
   Activity,
+  Settings,
 } from "lucide-react";
 import { logoutAction } from "@/actions/auth";
 import { cn } from "@/lib/utils";
@@ -19,7 +20,8 @@ const navItems = [
     label: "Randevular",
     icon: Calendar,
   },
-  { href: "/admin/dashboard/posts", label: "Sosyal Paylaşımlar", icon: FileText },
+  { href: "/admin/dashboard/posts", label: "Blog Yönetimi", icon: FileText },
+  { href: "/admin/dashboard/settings", label: "Site İçeriği", icon: Settings },
 ];
 
 export function AdminSidebar({ adminName }: { adminName: string }) {

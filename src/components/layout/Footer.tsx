@@ -1,13 +1,15 @@
 import Link from "next/link";
 import { Activity, Mail, MapPin, Phone } from "lucide-react";
-import { navLinks, siteConfig } from "@/lib/constants";
+import { navLinks } from "@/lib/constants";
 import { ankaraAreas } from "@/lib/local-seo";
+import { useSiteConfig } from "@/components/providers/SiteConfigProvider";
 
 const footerAreas = ankaraAreas.filter((a) =>
   ["cukurambar", "cankaya", "kecioren", "yenimahalle", "mamak", "etimesgut", "ayas", "sincan"].includes(a.slug),
 );
 
 export function Footer() {
+  const config = useSiteConfig();
   const currentYear = new Date().getFullYear();
 
   return (
@@ -19,13 +21,13 @@ export function Footer() {
             <Link
               href="/"
               className="mb-4 flex items-center gap-2.5"
-              aria-label={`${siteConfig.name} ana sayfa`}
+              aria-label={`${config.name} ana sayfa`}
             >
               <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary text-white">
                 <Activity className="h-4 w-4" aria-hidden="true" />
               </span>
               <span className="font-serif text-lg font-semibold text-white">
-                {siteConfig.name}
+                {config.name}
               </span>
             </Link>
             <p className="text-sm leading-relaxed text-gray-400">
@@ -61,28 +63,28 @@ export function Footer() {
             <ul className="space-y-3 text-sm">
               <li>
                 <a
-                  href={`tel:${siteConfig.phoneRaw}`}
+                  href={`tel:${config.phoneRaw}`}
                   className="flex items-center gap-2 transition-colors hover:text-accent"
                 >
                   <Phone className="h-4 w-4 shrink-0 text-secondary" aria-hidden="true" />
-                  {siteConfig.phone}
+                  {config.phone}
                 </a>
               </li>
               <li>
                 <a
-                  href={`mailto:${siteConfig.email}`}
+                  href={`mailto:${config.email}`}
                   className="flex items-center gap-2 transition-colors hover:text-accent"
                 >
                   <Mail className="h-4 w-4 shrink-0 text-secondary" aria-hidden="true" />
-                  {siteConfig.email}
+                  {config.email}
                 </a>
               </li>
               <li className="flex items-start gap-2">
                 <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-secondary" aria-hidden="true" />
                 <address className="not-italic">
-                  {siteConfig.address.street}
+                  {config.addressStreet}
                   <br />
-                  {siteConfig.address.city}, {siteConfig.address.region}
+                  {config.addressCity}, {config.addressDistrict}
                 </address>
               </li>
             </ul>
@@ -126,7 +128,7 @@ export function Footer() {
 
         <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-gray-800 pt-8 sm:flex-row">
           <p className="text-sm text-gray-500">
-            &copy; {currentYear} {siteConfig.name}. Tüm hakları saklıdır.
+            &copy; {currentYear} {config.name}. Tüm hakları saklıdır.
           </p>
           <p className="text-xs text-gray-600">
             Ankara Fizyoterapist · Fizik Tedavi ve Rehabilitasyon

@@ -18,7 +18,7 @@ export default async function SocialHubPage() {
       <section className="pb-20 pt-12 lg:pb-28">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <BlogHero />
-          <PostFeed posts={posts} layout="masonry" />
+          <PostFeed posts={posts} />
         </div>
       </section>
     </main>

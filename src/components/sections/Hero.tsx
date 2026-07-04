@@ -4,15 +4,17 @@ import Link from "next/link";
 import { motion, useReducedMotion } from "framer-motion";
 import { Activity, Clock } from "lucide-react";
 import { HeroImageSlider } from "@/components/sections/HeroImageSlider";
-
-const stats = [
-  { value: "10+", label: "Yıllık Deneyim" },
-  { value: "2.500+", label: "Mutlu Hasta" },
-  { value: "15+", label: "Tedavi Alanı" },
-];
+import { useSiteConfig } from "@/components/providers/SiteConfigProvider";
 
 export function Hero() {
+  const config = useSiteConfig();
   const shouldReduceMotion = useReducedMotion();
+
+  const stats = [
+    { value: config.stat1Value, label: config.stat1Label },
+    { value: config.stat2Value, label: config.stat2Label },
+    { value: config.stat3Value, label: config.stat3Label },
+  ];
 
   return (
     <section
@@ -43,22 +45,20 @@ export function Hero() {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.15 }}
           >
-            Ankara&apos;nın Güvenilir Fizyoterapisti
+            {config.heroBadge}
           </motion.p>
 
           <h1
             id="hero-heading"
             className="font-serif text-4xl font-semibold leading-[1.15] tracking-tight text-gray-900 sm:text-5xl lg:text-[3.5rem]"
           >
-            Sağlığınız İçin
+            {config.heroTitleLine1}
             <br />
-            <span className="text-primary">Profesyonel Fizyoterapi</span>
+            <span className="text-primary">{config.heroTitleLine2}</span>
           </h1>
 
           <p className="mt-6 max-w-lg text-base leading-relaxed text-gray-600 sm:text-lg">
-            Ortopedi, nöroloji, pediatri ve manuel terapi alanlarında uzman
-            fizyoterapist Soner Hıra ile kişiye özel tedavi planları ve güvenilir
-            rehabilitasyon hizmeti.
+            {config.heroDescription}
           </p>
 
           <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:gap-4">

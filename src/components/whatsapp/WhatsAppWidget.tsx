@@ -3,7 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Send } from "lucide-react";
-import { siteConfig, whatsappPresets } from "@/lib/constants";
+import { whatsappPresets } from "@/lib/constants";
+import { useSiteConfig } from "@/components/providers/SiteConfigProvider";
 import { WhatsAppIcon } from "@/components/whatsapp/WhatsAppIcon";
 import { cn } from "@/lib/utils";
 
@@ -27,15 +28,15 @@ const BOT_REPLIES: Record<string, string> = {
     "Tedavi ve rehabilitasyon süreci hakkında bilgi için WhatsApp üzerinden devam edelim.",
 };
 
-function formatCustomWhatsAppMessage(text: string) {
-  return `Merhaba Fzt. Soner Hıra, ${text} konusunda yardım almak istiyorum.`;
-}
-
-function getWhatsAppUrl(message: string) {
-  return `https://wa.me/${siteConfig.phoneRaw}?text=${encodeURIComponent(message)}`;
+function formatCustomWhatsAppMessage(text: string, name: string) {
+  return `Merhaba Fzt. ${name}, ${text} konusunda yardım almak istiyorum.`;
 }
 
 export function WhatsAppWidget() {
+  const config = useSiteConfig();
+
+  const getWhatsAppUrl = (message: string) =>
+    `https://wa.me/${config.phoneRaw}?text=${encodeURIComponent(message)}`;
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [isTyping, setIsTyping] = useState(false);
@@ -110,11 +111,11 @@ export function WhatsAppWidget() {
     setCustomMessage("");
     addBotReply(
       "Mesajınızı aldım. En kısa sürede WhatsApp üzerinden yanıtlayacağız.",
-      formatCustomWhatsAppMessage(text),
+      formatCustomWhatsAppMessage(text, config.name),
     );
   };
 
-  const directWhatsAppUrl = getWhatsAppUrl(siteConfig.whatsappMessage);
+  const directWhatsAppUrl = getWhatsAppUrl(config.whatsappMessage);
 
   return (
     <>
@@ -140,7 +141,7 @@ export function WhatsAppWidget() {
                     </div>
                     <div>
                       <p className="text-sm font-semibold text-white">
-                        Fzt. Soner Hıra
+                        Fzt. {config.name}
                       </p>
                       <p className="text-xs text-emerald-100">
                         Canlı Asistan · Çevrimiçi

@@ -4,7 +4,7 @@ import {
   getDashboardStats,
   getAppointments,
 } from "@/actions/appointments";
-import { AppointmentsTable } from "@/components/admin/AppointmentsTable";
+import { AppointmentsManager } from "@/components/admin/AppointmentsManager";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export const metadata: Metadata = {
@@ -82,7 +82,7 @@ export default async function DashboardPage() {
           Bugünkü Randevular
         </h2>
         {todayAppointments.length > 0 ? (
-          <AppointmentsTable appointments={todayAppointments} />
+          <AppointmentsManager appointments={todayAppointments} />
         ) : (
           <p className="rounded-xl border border-dashed border-slate-200 py-8 text-center text-slate-500">
             Bugün için randevu bulunmuyor.
@@ -94,7 +94,7 @@ export default async function DashboardPage() {
         <h2 className="mb-4 text-lg font-semibold text-navy-900">
           Son Randevular
         </h2>
-        <AppointmentsTable appointments={recentAppointments.slice(0, 10)} />
+        <AppointmentsManager appointments={recentAppointments.slice(0, 20)} />
       </div>
     </div>
   );

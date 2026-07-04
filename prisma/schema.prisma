@@ -53,6 +53,12 @@ model Appointment {
   @@index([createdAt])
 }
 
+model SiteContent {
+  id        String   @id @default("main")
+  data      Json
+  updatedAt DateTime @updatedAt
+}
+
 model Post {
   id          String       @id @default(cuid())
   title       String

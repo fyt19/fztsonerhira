@@ -1,6 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
 import { getAllAnkaraBlogPosts } from "../src/lib/ankara-blog-posts";
+import { defaultSiteContent } from "../src/lib/site-content-types";
 import { images } from "../src/lib/images";
 
 const prisma = new PrismaClient();
@@ -39,6 +40,12 @@ async function main() {
     where: { email },
     update: {},
     create: { email, passwordHash, name: "Soner Hıra" },
+  });
+
+  await prisma.siteContent.upsert({
+    where: { id: "main" },
+    update: {},
+    create: { id: "main", data: defaultSiteContent },
   });
 
   const existingPosts = await prisma.post.count();

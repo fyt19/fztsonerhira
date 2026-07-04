@@ -11,7 +11,8 @@ import {
 } from "lucide-react";
 import { AnimateOnScroll } from "@/components/ui/AnimateOnScroll";
 import { Button } from "@/components/ui/button";
-import { aboutBio, siteConfig } from "@/lib/constants";
+import { siteConfig } from "@/lib/constants";
+import { getSiteContent } from "@/lib/site-content";
 import { images } from "@/lib/images";
 
 export const metadata: Metadata = {
@@ -53,7 +54,9 @@ const highlights = [
   },
 ];
 
-export default function AboutPage() {
+export default async function AboutPage() {
+  const config = await getSiteContent();
+
   return (
     <main id="main-content" className="pt-28">
       {/* Page hero */}
@@ -70,7 +73,7 @@ export default function AboutPage() {
               Hakkımda
             </p>
             <h1 className="font-serif text-4xl font-semibold tracking-tight text-gray-900 sm:text-5xl">
-              {siteConfig.name}
+              {config.name}
             </h1>
             <p className="mt-4 max-w-2xl text-lg text-gray-600">
               Güvenilir, profesyonel ve etik standartlara uygun fizik tedavi
@@ -127,7 +130,7 @@ export default function AboutPage() {
                   <span className="float-left mr-3 mt-1 font-serif text-5xl font-semibold leading-none text-primary">
                     B
                   </span>
-                  {aboutBio.slice(1)}
+                  {config.aboutBio.slice(1)}
                 </p>
 
                 <div className="mt-10 space-y-5">

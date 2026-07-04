@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import type { Post } from "@prisma/client";
 import { Badge } from "@/components/ui/badge";
 import { getPostImage, images } from "@/lib/images";
+import { plainExcerpt } from "@/lib/text";
 import { cn } from "@/lib/utils";
 import { fadeInUp, staggerContainer } from "@/lib/animations";
 
@@ -24,22 +25,18 @@ type PostCardProps = {
 export function PostCard({ post, featured = false }: PostCardProps) {
   const platform = platformConfig[post.platform];
   const cover = getPostImage(post.imageUrl);
+  const excerpt = plainExcerpt(post.content, featured ? 180 : 120);
 
   return (
     <motion.article
       variants={fadeInUp}
       className={cn(
-        "group relative overflow-hidden rounded-3xl bg-white shadow-sm ring-1 ring-slate-100 transition-shadow hover:shadow-xl hover:shadow-teal-600/10",
-        featured && "md:col-span-2 lg:row-span-2",
+        "group relative flex h-full flex-col overflow-hidden rounded-3xl bg-white shadow-sm ring-1 ring-slate-100 transition-shadow hover:shadow-xl hover:shadow-primary/10",
+        featured && "md:col-span-2",
       )}
     >
-      <Link href={`/blog/${post.id}`} className="block">
-        <div
-          className={cn(
-            "relative overflow-hidden",
-            featured ? "aspect-[16/9] lg:aspect-auto lg:h-[320px]" : "aspect-[16/10]",
-          )}
-        >
+      <Link href={`/blog/${post.id}`} className="flex h-full flex-col">
+        <div className="relative aspect-[16/10] shrink-0 overflow-hidden">
           <Image
             src={cover}
             alt={post.title}
@@ -47,16 +44,16 @@ export function PostCard({ post, featured = false }: PostCardProps) {
             sizes={featured ? "60vw" : "33vw"}
             className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-navy-900/70 via-navy-900/10 to-transparent opacity-80 transition-opacity group-hover:opacity-90" />
+          <div className="absolute inset-0 bg-gradient-to-t from-primary-dark/60 via-primary-dark/10 to-transparent opacity-80" />
           <div className="absolute left-4 top-4">
             <Badge variant={platform.variant}>{platform.label}</Badge>
           </div>
         </div>
 
-        <div className={cn("p-6", featured && "lg:p-8")}>
+        <div className="flex flex-1 flex-col p-6">
           <time
             dateTime={post.createdAt.toISOString()}
-            className="text-xs font-medium uppercase tracking-wider text-slate-400"
+            className="text-xs font-medium uppercase tracking-wider text-gray-400"
           >
             {post.createdAt.toLocaleDateString("tr-TR", {
               day: "numeric",
@@ -67,23 +64,18 @@ export function PostCard({ post, featured = false }: PostCardProps) {
 
           <h3
             className={cn(
-              "mt-2 font-serif font-semibold text-navy-900 transition-colors group-hover:text-teal-700",
-              featured ? "text-2xl lg:text-3xl" : "text-lg",
+              "mt-2 line-clamp-2 font-serif font-semibold text-gray-800 transition-colors group-hover:text-primary",
+              featured ? "text-2xl" : "text-lg",
             )}
           >
             {post.title}
           </h3>
 
-          <p
-            className={cn(
-              "mt-3 leading-relaxed text-slate-600",
-              featured ? "line-clamp-4 text-base" : "line-clamp-3 text-sm",
-            )}
-          >
-            {post.content}
+          <p className="mt-3 line-clamp-3 flex-1 text-sm leading-relaxed text-gray-600">
+            {excerpt}
           </p>
 
-          <span className="mt-5 inline-flex items-center gap-1 text-sm font-semibold text-teal-600">
+          <span className="mt-5 inline-flex items-center gap-1 text-sm font-semibold text-primary">
             Devamını Oku
             <motion.span
               className="inline-block"
@@ -128,27 +120,9 @@ export function PostFeed({ posts, limit, layout = "grid" }: PostFeedProps) {
     );
   }
 
-  if (layout === "masonry") {
-    return (
-      <motion.div
-        className="columns-1 gap-6 sm:columns-2 lg:columns-3"
-        variants={staggerContainer}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, margin: "-40px" }}
-      >
-        {displayPosts.map((post, i) => (
-          <div key={post.id} className="mb-6 break-inside-avoid">
-            <PostCard post={post} featured={i === 0} />
-          </div>
-        ))}
-      </motion.div>
-    );
-  }
-
   return (
     <motion.div
-      className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
+      className="grid auto-rows-fr gap-6 sm:grid-cols-2 lg:grid-cols-3"
       variants={staggerContainer}
       initial="hidden"
       whileInView="visible"
@@ -158,7 +132,7 @@ export function PostFeed({ posts, limit, layout = "grid" }: PostFeedProps) {
         <PostCard
           key={post.id}
           post={post}
-          featured={i === 0 && !limit}
+          featured={i === 0 && !limit && layout === "grid"}
         />
       ))}
     </motion.div>

@@ -5,9 +5,11 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, X, Activity } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { navLinks, siteConfig } from "@/lib/constants";
+import { navLinks } from "@/lib/constants";
+import { useSiteConfig } from "@/components/providers/SiteConfigProvider";
 
 export function Header() {
+  const config = useSiteConfig();
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
   const [isScrolled, setIsScrolled] = useState(false);
@@ -38,13 +40,13 @@ export function Header() {
         <Link
           href="/"
           className="group flex items-center gap-2.5"
-          aria-label={`${siteConfig.name} ana sayfa`}
+          aria-label={`${config.name} ana sayfa`}
         >
           <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary text-white shadow-md shadow-primary/25 transition-transform group-hover:scale-105">
             <Activity className="h-5 w-5" aria-hidden="true" />
           </span>
           <span className="font-serif text-xl font-semibold text-gray-800">
-            {siteConfig.name}
+            {config.name}
           </span>
         </Link>
 

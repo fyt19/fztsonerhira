@@ -1,21 +1,12 @@
-import { Header } from "@/components/layout/Header";
-import { Footer } from "@/components/layout/Footer";
-import { WhatsAppWidget } from "@/components/whatsapp/WhatsAppWidget";
+import { getSiteContent } from "@/lib/site-content";
+import { SiteShell } from "@/components/layout/SiteShell";
 
-export default function SiteLayout({
+export default async function SiteLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  return (
-    <>
-      <a href="#main-content" className="skip-link">
-        Ana içeriğe geç
-      </a>
-      <Header />
-      {children}
-      <Footer />
-      <WhatsAppWidget />
-    </>
-  );
+  const config = await getSiteContent();
+
+  return <SiteShell config={config}>{children}</SiteShell>;
 }
