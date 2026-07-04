@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
+import { getAllAnkaraBlogPosts } from "../src/lib/ankara-blog-posts";
 import { images } from "../src/lib/images";
 
 const prisma = new PrismaClient();
@@ -63,6 +64,30 @@ async function main() {
       }
     }
   }
+
+  // Ankara ilçe/mahalle SEO blog yazıları
+  const ankaraBlogs = getAllAnkaraBlogPosts();
+  let blogCreated = 0;
+  let blogUpdated = 0;
+
+  for (const blog of ankaraBlogs) {
+    const existing = await prisma.post.findFirst({
+      where: { title: blog.title },
+    });
+
+    if (existing) {
+      await prisma.post.update({
+        where: { id: existing.id },
+        data: blog,
+      });
+      blogUpdated++;
+    } else {
+      await prisma.post.create({ data: blog });
+      blogCreated++;
+    }
+  }
+
+  console.log(`Ankara SEO blogları: ${blogCreated} yeni, ${blogUpdated} güncellendi.`);
 
   console.log("Seed completed.");
   console.log(`Admin: ${email}`);

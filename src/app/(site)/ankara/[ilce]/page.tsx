@@ -14,6 +14,7 @@ import {
   generateAreaSlugs,
 } from "@/lib/local-seo";
 import { images } from "@/lib/images";
+import { getPostByTitle } from "@/actions/posts";
 
 type Props = { params: Promise<{ ilce: string }> };
 
@@ -51,6 +52,10 @@ export default async function LocalAreaPage({ params }: Props) {
   const relatedAreas = ankaraAreas
     .filter((a) => a.slug !== area.slug)
     .slice(0, 8);
+
+  const blogPost = await getPostByTitle(
+    `${area.name} Fizyoterapist | Ankara Fizik Tedavi Rehberi`,
+  );
 
   return (
     <main id="main-content" className="pt-28">
@@ -127,6 +132,23 @@ export default async function LocalAreaPage({ params }: Props) {
               ))}
             </ul>
           </section>
+
+          {blogPost && (
+            <section className="mt-14 rounded-2xl border border-primary/20 bg-primary-light/40 p-8">
+              <h2 className="font-serif text-xl font-semibold text-navy-900">
+                {area.name} Fizyoterapist Detaylı Rehber
+              </h2>
+              <p className="mt-3 text-slate-600">
+                {area.name} bölgesinde fizik tedavi, rehabilitasyon ve manuel terapi
+                hakkında kapsamlı bilgi için blog yazımızı okuyun.
+              </p>
+              <Button asChild variant="teal" className="mt-5">
+                <Link href={`/blog/${blogPost.id}`}>
+                  {area.name} Fizyoterapist Blog Yazısı →
+                </Link>
+              </Button>
+            </section>
+          )}
 
           <section className="mt-14 rounded-2xl bg-teal-50 p-8 text-center">
             <h2 className="font-serif text-xl font-semibold text-navy-900">

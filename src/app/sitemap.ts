@@ -1,8 +1,9 @@
 import type { MetadataRoute } from "next";
+import { getPosts } from "@/actions/posts";
 import { siteConfig } from "@/lib/constants";
 import { generateAreaSlugs } from "@/lib/local-seo";
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const base = siteConfig.url;
   const now = new Date();
 
@@ -27,5 +28,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: slug === "cukurambar" || slug === "cankaya" ? 0.9 : 0.7,
   }));
 
-  return [...staticPages, ...areaPages];
+  const posts = await getPosts();
+  const blogPages = posts.map((post) => ({
+    url: `${base}/blog/${post.id}`,
+    lastModified: post.updatedAt,
+    changeFrequency: "monthly" as const,
+    priority: 0.75,
+  }));
+
+  return [...staticPages, ...areaPages, ...blogPages];
 }

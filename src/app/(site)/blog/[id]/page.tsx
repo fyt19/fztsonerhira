@@ -22,12 +22,18 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const post = await getPostById(id);
   if (!post) return { title: "Yazı Bulunamadı" };
 
+  const plainDescription = post.content
+    .replace(/\*\*/g, "")
+    .replace(/^##\s+/gm, "")
+    .replace(/\n+/g, " ")
+    .trim();
+
   return {
     title: post.title,
-    description: post.content.slice(0, 160),
+    description: plainDescription.slice(0, 160),
     openGraph: {
       title: post.title,
-      description: post.content.slice(0, 160),
+      description: plainDescription.slice(0, 160),
       images: [{ url: getPostImage(post.imageUrl) }],
     },
     alternates: { canonical: `${siteConfig.url}/blog/${id}` },
@@ -82,9 +88,35 @@ export default async function BlogPostPage({ params }: Props) {
           </h1>
 
           <div className="mt-10 space-y-6 text-lg leading-relaxed text-slate-700">
-            {post.content.split("\n\n").map((paragraph, i) => (
-              <p key={i}>{paragraph}</p>
-            ))}
+            {post.content.split("\n\n").map((block, i) => {
+              if (block.startsWith("## ")) {
+                return (
+                  <h2
+                    key={i}
+                    className="!mt-10 font-serif text-2xl font-semibold text-navy-900 first:!mt-0"
+                  >
+                    {block.slice(3)}
+                  </h2>
+                );
+              }
+              if (block.startsWith("### ")) {
+                return (
+                  <h3 key={i} className="font-serif text-xl font-semibold text-navy-900">
+                    {block.slice(4)}
+                  </h3>
+                );
+              }
+              const html = block.replace(
+                /\*\*(.+?)\*\*/g,
+                "<strong>$1</strong>",
+              );
+              return (
+                <p
+                  key={i}
+                  dangerouslySetInnerHTML={{ __html: html }}
+                />
+              );
+            })}
           </div>
 
           {post.externalUrl && (

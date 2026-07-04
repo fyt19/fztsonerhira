@@ -42,6 +42,16 @@ export async function getPostById(id: string) {
   }
 }
 
+export async function getPostByTitle(title: string) {
+  try {
+    return await prisma.post.findFirst({
+      where: { title, published: true },
+    });
+  } catch {
+    return null;
+  }
+}
+
 export async function createPost(
   data: z.infer<typeof postSchema>,
 ): Promise<ActionResult<{ id: string }>> {
