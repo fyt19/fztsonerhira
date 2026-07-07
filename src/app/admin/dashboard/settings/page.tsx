@@ -16,7 +16,8 @@ export default async function SettingsPage() {
         <h1 className="text-2xl font-semibold text-gray-800">Site İçeriği</h1>
         <p className="mt-1 text-sm text-gray-500">
           Telefon, hero metinleri, hakkımda ve SEO bilgilerini buradan
-          güncelleyin. Değişiklikler anında sitede görünür.
+          güncelleyin. Değişiklikler anında sitede görünür. Buraya Bazı göerev yaptığı ilçeler eklenecek
+          
         </p>
       </div>
       <SiteSettingsForm initial={config} />
