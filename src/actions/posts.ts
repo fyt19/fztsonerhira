@@ -9,7 +9,14 @@ const postSchema = z.object({
   title: z.string().min(3),
   content: z.string().min(10),
   imageUrl: z.string().url().optional().or(z.literal("")),
-  platform: z.enum(["INSTAGRAM", "LINKEDIN", "ARTICLE", "GENERAL"]),
+  platform: z.enum([
+    "INSTAGRAM",
+    "LINKEDIN",
+    "ARTICLE",
+    "VIDEO",
+    "CONTENT",
+    "GENERAL",
+  ]),
   externalUrl: z.string().url().optional().or(z.literal("")),
   published: z.boolean().default(true),
 });

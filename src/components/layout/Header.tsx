@@ -3,9 +3,10 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, X, Activity } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { navLinks } from "@/lib/constants";
+import { BrandLogo } from "@/components/layout/BrandLogo";
 import { useSiteConfig } from "@/components/providers/SiteConfigProvider";
 
 export function Header() {
@@ -37,18 +38,7 @@ export function Header() {
       }`}
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 lg:px-8">
-        <Link
-          href="/"
-          className="group flex items-center gap-2.5"
-          aria-label={`${config.name} ana sayfa`}
-        >
-          <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary text-white shadow-md shadow-primary/25 transition-transform group-hover:scale-105">
-            <Activity className="h-5 w-5" aria-hidden="true" />
-          </span>
-          <span className="font-serif text-xl font-semibold text-gray-800">
-            {config.name}
-          </span>
-        </Link>
+        <BrandLogo name={config.name} />
 
         {/* Desktop navigation */}
         <nav className="hidden items-center gap-8 md:flex" aria-label="Ana menü">

@@ -8,22 +8,9 @@ import { siteConfig, services } from "@/lib/constants";
 import { ankaraAreas } from "@/lib/local-seo";
 import { images } from "@/lib/images";
 
-export const metadata: Metadata = {
-  title: "Ankara Fizyoterapist — Hizmet Bölgeleri",
-  description:
-    "Ankara'nın tüm ilçe ve mahallelerinde fizyoterapi hizmeti: Çukurambar, Çankaya, Keçiören, Yenimahalle, Mamak, Etimesgut, Ayaş ve daha fazlası. Soner Hıra ile randevu alın.",
-  keywords: [
-    "ankara fizyoterapist",
-    "çukurambar fizyoterapist",
-    "çankaya fizyoterapist",
-    "keçiören fizyoterapist",
-    "ayaş fizyoterapist",
-    "ankara fizik tedavi",
-    "ankara manuel terapi",
-    "soner hıra ankara",
-  ],
-  alternates: { canonical: `${siteConfig.url}/ankara` },
-};
+import { ankaraHubMetadata } from "@/lib/seo";
+
+export const metadata: Metadata = ankaraHubMetadata;
 
 export default function AnkaraHubPage() {
   const mahalleler = ankaraAreas.filter((a) => a.type === "mahalle");

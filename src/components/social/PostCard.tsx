@@ -5,17 +5,18 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import type { Post } from "@prisma/client";
 import { Badge } from "@/components/ui/badge";
+import { Play, ExternalLink } from "lucide-react";
 import { getPostImage, images } from "@/lib/images";
+import {
+  getYouTubeThumbnail,
+  isSocialPlatform,
+  platformMeta,
+} from "@/lib/post-platforms";
 import { plainExcerpt } from "@/lib/text";
 import { cn } from "@/lib/utils";
 import { fadeInUp, staggerContainer } from "@/lib/animations";
 
-const platformConfig = {
-  INSTAGRAM: { label: "Instagram", variant: "instagram" as const },
-  LINKEDIN: { label: "LinkedIn", variant: "linkedin" as const },
-  ARTICLE: { label: "Blog", variant: "article" as const },
-  GENERAL: { label: "Haber", variant: "teal" as const },
-};
+const platformConfig = platformMeta;
 
 type PostCardProps = {
   post: Post;
@@ -24,8 +25,14 @@ type PostCardProps = {
 
 export function PostCard({ post, featured = false }: PostCardProps) {
   const platform = platformConfig[post.platform];
-  const cover = getPostImage(post.imageUrl);
+  const cover = getPostImage(
+    post.imageUrl ||
+      (post.platform === "VIDEO" ? getYouTubeThumbnail(post.externalUrl) : null),
+  );
   const excerpt = plainExcerpt(post.content, featured ? 180 : 120);
+  const isVideo = post.platform === "VIDEO";
+  const isSocial = isSocialPlatform(post.platform);
+  const socialLabel = platform.socialLabel;
 
   return (
     <motion.article
@@ -48,6 +55,13 @@ export function PostCard({ post, featured = false }: PostCardProps) {
           <div className="absolute left-4 top-4">
             <Badge variant={platform.variant}>{platform.label}</Badge>
           </div>
+          {isVideo && (
+            <div className="absolute inset-0 flex items-center justify-center">
+              <span className="flex h-14 w-14 items-center justify-center rounded-full bg-white/90 shadow-lg">
+                <Play className="h-6 w-6 text-primary" fill="currentColor" />
+              </span>
+            </div>
+          )}
         </div>
 
         <div className="flex flex-1 flex-col p-6">
@@ -76,17 +90,34 @@ export function PostCard({ post, featured = false }: PostCardProps) {
           </p>
 
           <span className="mt-5 inline-flex items-center gap-1 text-sm font-semibold text-primary">
-            Devamını Oku
-            <motion.span
-              className="inline-block"
-              initial={{ x: 0 }}
-              whileHover={{ x: 4 }}
-            >
-              →
-            </motion.span>
+            {isSocial && socialLabel ? socialLabel : "Devamını Oku"}
+            {isSocial ? (
+              <ExternalLink className="h-4 w-4" aria-hidden="true" />
+            ) : (
+              <motion.span
+                className="inline-block"
+                initial={{ x: 0 }}
+                whileHover={{ x: 4 }}
+              >
+                →
+              </motion.span>
+            )}
           </span>
         </div>
       </Link>
+
+      {isSocial && post.externalUrl && (
+        <a
+          href={post.externalUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="absolute right-4 top-4 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-white/90 text-gray-700 shadow-md transition-colors hover:bg-white hover:text-primary"
+          aria-label={socialLabel ?? "Sosyal medyada aç"}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <ExternalLink className="h-4 w-4" />
+        </a>
+      )}
     </motion.article>
   );
 }

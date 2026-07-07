@@ -1,14 +1,10 @@
 import type { Metadata } from "next";
-import { BlogHero, PostFeed } from "@/components/social/PostCard";
+import { BlogHubFeed } from "@/components/social/BlogHubFeed";
+import { BlogHero } from "@/components/social/PostCard";
 import { getPosts } from "@/actions/posts";
-import { siteConfig } from "@/lib/constants";
+import { blogHubMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Blog & Haberler",
-  description:
-    "Soner Hıra kliniğinden güncel haberler, sağlık ipuçları, blog yazıları ve uzman görüşleri.",
-  alternates: { canonical: `${siteConfig.url}/sosyal-hub` },
-};
+export const metadata: Metadata = blogHubMetadata;
 
 export default async function SocialHubPage() {
   const posts = await getPosts();
@@ -18,7 +14,7 @@ export default async function SocialHubPage() {
       <section className="pb-20 pt-12 lg:pb-28">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <BlogHero />
-          <PostFeed posts={posts} />
+          <BlogHubFeed posts={posts} />
         </div>
       </section>
     </main>

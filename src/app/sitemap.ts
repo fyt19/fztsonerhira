@@ -8,24 +8,27 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date();
 
   const staticPages = [
-    "",
-    "/hakkimda",
-    "/hizmetlerimiz",
-    "/sosyal-hub",
-    "/randevu",
-    "/ankara",
-  ].map((path) => ({
+    { path: "", priority: 1.0 },
+    { path: "/hakkimda", priority: 0.95 },
+    { path: "/hizmetlerimiz", priority: 0.9 },
+    { path: "/randevu", priority: 0.9 },
+    { path: "/sosyal-hub", priority: 0.8 },
+    { path: "/ankara", priority: 0.9 },
+  ].map(({ path, priority }) => ({
     url: `${base}${path}`,
     lastModified: now,
     changeFrequency: "weekly" as const,
-    priority: path === "" ? 1 : 0.8,
+    priority,
   }));
 
   const areaPages = generateAreaSlugs().map((slug) => ({
     url: `${base}/ankara/${slug}`,
     lastModified: now,
     changeFrequency: "monthly" as const,
-    priority: slug === "cukurambar" || slug === "cankaya" ? 0.9 : 0.7,
+    priority:
+      slug === "cukurambar" || slug === "cankaya" || slug === "kecioren"
+        ? 0.85
+        : 0.75,
   }));
 
   const posts = await getPosts();

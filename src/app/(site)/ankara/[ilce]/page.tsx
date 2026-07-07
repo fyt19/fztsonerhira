@@ -75,9 +75,11 @@ export default async function LocalAreaPage({ params }: Props) {
               Ankara · {area.type === "mahalle" ? "Mahalle" : "İlçe"}
             </p>
             <h1 className="mt-4 font-serif text-4xl font-semibold text-white sm:text-5xl">
-              {area.name} Fizyoterapist
+              {area.name} Fizyoterapist Soner Hıra
             </h1>
-            <p className="mt-2 text-lg text-teal-200">{siteConfig.name}</p>
+            <p className="mt-2 text-lg text-teal-200">
+              Fizyoterapist {siteConfig.name} — Ankara
+            </p>
             <p className="mx-auto mt-6 max-w-2xl text-slate-300">{area.intro}</p>
             <Button asChild variant="teal" size="lg" className="mt-8">
               <Link href="/randevu">{locationLabel} Randevu Al →</Link>

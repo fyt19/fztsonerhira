@@ -4,15 +4,11 @@ import Link from "next/link";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { AnimateOnScroll } from "@/components/ui/AnimateOnScroll";
 import { Button } from "@/components/ui/button";
-import { services, siteConfig } from "@/lib/constants";
+import { services } from "@/lib/constants";
+import { servicesMetadata } from "@/lib/seo";
 import { getServiceImage } from "@/lib/images";
 
-export const metadata: Metadata = {
-  title: "Hizmetlerimiz",
-  description:
-    "Ortopedik, nörolojik, pediatrik rehabilitasyon, yoğun bakım sonrası fizik tedavi ve manuel terapi hizmetleri.",
-  alternates: { canonical: `${siteConfig.url}/hizmetlerimiz` },
-};
+export const metadata: Metadata = servicesMetadata;
 
 const extendedDetails: Record<string, string> = {
   ortopedik:
@@ -23,6 +19,8 @@ const extendedDetails: Record<string, string> = {
     "Serebral palsi, gelişimsel gecikme ve ortopedik sorunlarda çocuk dostu, oyun temelli rehabilitasyon yaklaşımları ile aileleri de sürece dahil ediyoruz.",
   "yogun-bakim":
     "Yoğun bakım sonrası solunum egzersizleri, yatak içi mobilizasyon ve erken ayağa kalkma programları ile komplikasyon riskini minimize ediyoruz.",
+  "evde-fizyoterapi":
+    "Yaşlı, yatalak veya hareket kısıtlılığı olan danışanlar için evde değerlendirme, egzersiz uygulaması ve aile eğitimi ile güvenli rehabilitasyon süreci sunuyoruz.",
   "manuel-terapi":
     "Mobilizasyon, manipülasyon ve yumuşak doku teknikleri ile ağrı yönetimi ve fonksiyonel iyileşme sağlanır. Her seans öncesi detaylı değerlendirme yapılır.",
 };

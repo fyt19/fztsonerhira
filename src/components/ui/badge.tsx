@@ -13,6 +13,7 @@ const badgeVariants = cva(
         instagram: "border-transparent bg-gradient-to-r from-purple-500 to-pink-500 text-white",
         linkedin: "border-transparent bg-[#0A66C2] text-white",
         article: "border-transparent bg-warning/10 text-warning",
+        video: "border-transparent bg-red-100 text-red-700",
         pending: "border-transparent bg-warning/10 text-warning",
         approved: "border-transparent bg-success/10 text-success",
         completed: "border-transparent bg-primary-light text-primary-dark",

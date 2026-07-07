@@ -2,8 +2,21 @@
 
 import { useState, useTransition } from "react";
 import Image from "next/image";
-import type { Post } from "@prisma/client";
-import { Pencil, Trash2, Eye, EyeOff, Plus, X, Save } from "lucide-react";
+import type { Post, PostPlatform } from "@prisma/client";
+import {
+  Pencil,
+  Trash2,
+  Eye,
+  EyeOff,
+  Plus,
+  X,
+  Save,
+  Play,
+  FileText,
+  Video,
+  Newspaper,
+  Share2,
+} from "lucide-react";
 import {
   createPost,
   deletePost,
@@ -11,6 +24,14 @@ import {
   updatePost,
 } from "@/actions/posts";
 import { getPostImage } from "@/lib/images";
+import {
+  contentTabs,
+  filterPostsByTab,
+  getYouTubeThumbnail,
+  isSocialPlatform,
+  platformMeta,
+  type ContentTab,
+} from "@/lib/post-platforms";
 import { plainExcerpt } from "@/lib/text";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -23,15 +44,15 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
 
-const platformOptions = [
-  { value: "ARTICLE", label: "Blog / Makale" },
-  { value: "INSTAGRAM", label: "Instagram" },
-  { value: "LINKEDIN", label: "LinkedIn" },
-  { value: "GENERAL", label: "Genel" },
-] as const;
-
-type Platform = (typeof platformOptions)[number]["value"];
+const tabIcons = {
+  all: Newspaper,
+  ARTICLE: FileText,
+  VIDEO: Video,
+  SOCIAL: Share2,
+  CONTENT: Newspaper,
+};
 
 type PostsManagerProps = {
   posts: Post[];
@@ -39,15 +60,48 @@ type PostsManagerProps = {
 
 function PostForm({
   initial,
+  defaultPlatform,
   onCancel,
   onSuccess,
 }: {
   initial?: Post;
+  defaultPlatform?: PostPlatform;
   onCancel: () => void;
   onSuccess: (msg: string) => void;
 }) {
   const [pending, startTransition] = useTransition();
+  const [platform, setPlatform] = useState<PostPlatform>(
+    initial?.platform ?? defaultPlatform ?? "ARTICLE",
+  );
   const [imageUrl, setImageUrl] = useState(initial?.imageUrl ?? "");
+  const [videoUrl, setVideoUrl] = useState(
+    initial?.platform === "VIDEO" ? (initial.externalUrl ?? "") : "",
+  );
+  const [socialUrl, setSocialUrl] = useState(
+    initial && isSocialPlatform(initial.platform)
+      ? (initial.externalUrl ?? "")
+      : "",
+  );
+
+  const isVideo = platform === "VIDEO";
+  const isBlog = platform === "ARTICLE";
+  const isSocial = isSocialPlatform(platform);
+
+  const handleVideoUrlChange = (url: string) => {
+    setVideoUrl(url);
+    const thumb = getYouTubeThumbnail(url);
+    if (thumb && !imageUrl) setImageUrl(thumb);
+  };
+
+  const formTitle = initial
+    ? "İçeriği Düzenle"
+    : isVideo
+      ? "Yeni Video Ekle"
+      : isSocial
+        ? `Yeni ${platformMeta[platform].label} Paylaşımı`
+        : isBlog
+          ? "Yeni Blog Ekle"
+          : "Yeni İçerik Ekle";
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -55,9 +109,13 @@ function PostForm({
     const payload = {
       title: formData.get("title") as string,
       content: formData.get("content") as string,
-      imageUrl: imageUrl || "",
-      platform: formData.get("platform") as Platform,
-      externalUrl: (formData.get("externalUrl") as string) || "",
+      imageUrl: imageUrl || (isVideo ? getYouTubeThumbnail(videoUrl) ?? "" : ""),
+      platform,
+      externalUrl: isVideo
+        ? videoUrl
+        : isSocial
+          ? socialUrl
+          : ((formData.get("externalUrl") as string) || ""),
       published: initial?.published ?? true,
     };
 
@@ -67,7 +125,7 @@ function PostForm({
         : await createPost(payload);
 
       if (result.success) {
-        onSuccess(initial ? "Yazı güncellendi." : "Yazı oluşturuldu.");
+        onSuccess(initial ? "İçerik güncellendi." : "İçerik yayınlandı.");
       } else {
         onSuccess(result.error);
       }
@@ -77,13 +135,61 @@ function PostForm({
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between">
-        <CardTitle>{initial ? "Yazıyı Düzenle" : "Yeni Yazı Oluştur"}</CardTitle>
+        <CardTitle>{formTitle}</CardTitle>
         <Button type="button" variant="ghost" size="icon" onClick={onCancel}>
           <X className="h-4 w-4" />
         </Button>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
+          {!initial && (
+            <div>
+              <Label>İçerik Türü</Label>
+              <div className="mt-2 flex flex-wrap gap-2">
+                {(["ARTICLE", "VIDEO", "INSTAGRAM", "LINKEDIN", "CONTENT"] as const).map(
+                  (p) => (
+                  <button
+                    key={p}
+                    type="button"
+                    onClick={() => setPlatform(p)}
+                    className={cn(
+                      "rounded-full px-4 py-2 text-sm font-medium transition-colors",
+                      platform === p
+                        ? "bg-primary text-white"
+                        : "bg-gray-100 text-gray-600 hover:bg-gray-200",
+                    )}
+                  >
+                    {platformMeta[p].label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {isSocial && (
+            <div>
+              <Label htmlFor="socialUrl">
+                {platformMeta[platform].label} Paylaşım Linki *
+              </Label>
+              <Input
+                id="socialUrl"
+                type="url"
+                required
+                value={socialUrl}
+                onChange={(e) => setSocialUrl(e.target.value)}
+                placeholder={
+                  platform === "INSTAGRAM"
+                    ? "https://www.instagram.com/p/..."
+                    : "https://www.linkedin.com/posts/..."
+                }
+                className="mt-1.5"
+              />
+              <p className="mt-1 text-xs text-gray-500">
+                Sosyal medyada paylaştığınız gönderinin tam linkini yapıştırın.
+              </p>
+            </div>
+          )}
+
           <div>
             <Label htmlFor="title">Başlık</Label>
             <Input
@@ -92,76 +198,110 @@ function PostForm({
               required
               defaultValue={initial?.title}
               className="mt-1.5"
+              placeholder={
+                isVideo
+                  ? "Örn: Bel Ağrısı Egzersizleri"
+                  : "İçerik başlığı"
+              }
             />
           </div>
+
+          {isVideo && (
+            <div>
+              <Label htmlFor="videoUrl">YouTube Video Linki *</Label>
+              <Input
+                id="videoUrl"
+                type="url"
+                required
+                value={videoUrl}
+                onChange={(e) => handleVideoUrlChange(e.target.value)}
+                placeholder="https://www.youtube.com/watch?v=..."
+                className="mt-1.5"
+              />
+              <p className="mt-1 text-xs text-gray-500">
+                YouTube linki yapıştırın. Kapak görseli otomatik alınır.
+              </p>
+            </div>
+          )}
+
           <div>
-            <Label htmlFor="content">İçerik</Label>
+            <Label htmlFor="content">
+              {isVideo
+                ? "Video Açıklaması"
+                : isSocial
+                  ? "Paylaşım Özeti"
+                  : isBlog
+                    ? "Blog İçeriği"
+                    : "İçerik Metni"}
+            </Label>
             <Textarea
               id="content"
               name="content"
               required
-              rows={12}
+              rows={isBlog ? 14 : isSocial ? 5 : 6}
               defaultValue={initial?.content}
               className="mt-1.5 font-mono text-sm"
-              placeholder="## Bölüm başlığı için ## kullanın. **kalın** metin için yıldız kullanın."
+              placeholder={
+                isBlog
+                  ? "## Bölüm başlığı için ## kullanın.\n\n**kalın** metin için yıldız kullanın."
+                  : isSocial
+                    ? "Paylaşımın kısa özeti — ziyaretçiler blogda bu metni görür, tam içerik için sosyal medya linkine gider."
+                    : "Kısa açıklama veya duyuru metni..."
+              }
             />
           </div>
+
           <div className="grid gap-4 lg:grid-cols-2">
             <div className="space-y-4">
               <div>
-                <Label htmlFor="platform">Kategori</Label>
-                <select
-                  id="platform"
-                  name="platform"
-                  defaultValue={initial?.platform ?? "ARTICLE"}
-                  className="mt-1.5 flex h-11 w-full rounded-xl border border-gray-100 bg-off-white px-4 text-sm"
-                >
-                  {platformOptions.map((o) => (
-                    <option key={o.value} value={o.value}>
-                      {o.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div>
-                <Label htmlFor="imageUrl">Görsel URL</Label>
+                <Label htmlFor="imageUrl">
+                  {isVideo ? "Kapak Görseli (isteğe bağlı)" : "Görsel URL"}
+                </Label>
                 <Input
                   id="imageUrl"
-                  name="imageUrl"
                   type="url"
                   value={imageUrl}
                   onChange={(e) => setImageUrl(e.target.value)}
                   placeholder="https://..."
                   className="mt-1.5"
                 />
-                <p className="mt-1 text-xs text-gray-500">
-                  Unsplash veya kendi görsel linkinizi yapıştırın.
-                </p>
               </div>
-              <div>
-                <Label htmlFor="externalUrl">Harici Bağlantı (isteğe bağlı)</Label>
-                <Input
-                  id="externalUrl"
-                  name="externalUrl"
-                  type="url"
-                  defaultValue={initial?.externalUrl ?? ""}
-                  className="mt-1.5"
-                />
-              </div>
+              {!isVideo && !isSocial && (
+                <div>
+                  <Label htmlFor="externalUrl">Harici Bağlantı (isteğe bağlı)</Label>
+                  <Input
+                    id="externalUrl"
+                    name="externalUrl"
+                    type="url"
+                    defaultValue={
+                      initial?.platform !== "VIDEO" ? (initial?.externalUrl ?? "") : ""
+                    }
+                    className="mt-1.5"
+                  />
+                </div>
+              )}
             </div>
             <div>
-              <Label>Görsel Önizleme</Label>
+              <Label>Önizleme</Label>
               <div className="relative mt-1.5 aspect-[16/10] overflow-hidden rounded-xl border border-gray-100 bg-gray-50">
                 <Image
-                  src={getPostImage(imageUrl || null)}
+                  src={getPostImage(
+                    imageUrl || (isVideo ? getYouTubeThumbnail(videoUrl) : null),
+                  )}
                   alt="Önizleme"
                   fill
                   className="object-cover"
-                  unoptimized={imageUrl?.startsWith("http")}
+                  unoptimized
                 />
+                {isVideo && (
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/30">
+                    <Play className="h-12 w-12 text-white" fill="white" />
+                  </div>
+                )}
               </div>
             </div>
           </div>
+
           <div className="flex gap-2">
             <Button type="submit" variant="teal" disabled={pending}>
               <Save className="h-4 w-4" />
@@ -178,17 +318,27 @@ function PostForm({
 }
 
 export function PostsManager({ posts }: PostsManagerProps) {
+  const [activeTab, setActiveTab] = useState<ContentTab>("all");
   const [mode, setMode] = useState<"list" | "create" | "edit">("list");
+  const [createPlatform, setCreatePlatform] = useState<PostPlatform>("ARTICLE");
   const [editingPost, setEditingPost] = useState<Post | null>(null);
   const [pending, startTransition] = useTransition();
   const [message, setMessage] = useState<string | null>(null);
   const [search, setSearch] = useState("");
 
-  const filtered = posts.filter(
+  const tabInfo = contentTabs.find((t) => t.id === activeTab)!;
+  const tabPosts = filterPostsByTab(posts, activeTab);
+  const filtered = tabPosts.filter(
     (p) =>
       p.title.toLowerCase().includes(search.toLowerCase()) ||
       p.content.toLowerCase().includes(search.toLowerCase()),
   );
+
+  const openCreate = (platform: PostPlatform) => {
+    setCreatePlatform(platform);
+    setMode("create");
+    setEditingPost(null);
+  };
 
   const handleSuccess = (msg: string) => {
     setMessage(msg);
@@ -196,28 +346,56 @@ export function PostsManager({ posts }: PostsManagerProps) {
     setEditingPost(null);
   };
 
+  const defaultPlatformForTab =
+    activeTab === "ARTICLE" || activeTab === "VIDEO"
+      ? activeTab
+      : activeTab === "SOCIAL"
+        ? "INSTAGRAM"
+        : "CONTENT";
+
   return (
     <div className="space-y-6">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <h2 className="text-lg font-semibold text-gray-800">Blog Yönetimi</h2>
-          <p className="text-sm text-gray-500">
-            {posts.length} yazı · Başlık, içerik ve görselleri düzenleyin
-          </p>
-        </div>
-        {mode === "list" && (
-          <Button
-            variant="teal"
-            size="sm"
-            onClick={() => {
-              setMode("create");
-              setEditingPost(null);
-            }}
-          >
-            <Plus className="h-4 w-4" />
-            Yeni Yazı
-          </Button>
-        )}
+      <div>
+        <h2 className="text-lg font-semibold text-gray-800">İçerik Yönetimi</h2>
+        <p className="text-sm text-gray-500">
+          Blog, video, sosyal medya ve site içeriklerini ekleyin, düzenleyin veya kaldırın.
+        </p>
+      </div>
+
+      {/* Tabs */}
+      <div className="flex flex-wrap gap-2">
+        {contentTabs.map((tab) => {
+          const Icon = tabIcons[tab.id];
+          const count =
+            tab.id === "all" ? posts.length : filterPostsByTab(posts, tab.id).length;
+          return (
+            <button
+              key={tab.id}
+              type="button"
+              onClick={() => {
+                setActiveTab(tab.id);
+                setMode("list");
+              }}
+              className={cn(
+                "flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium transition-colors",
+                activeTab === tab.id
+                  ? "bg-primary text-white shadow-md"
+                  : "bg-white text-gray-600 ring-1 ring-gray-100 hover:bg-gray-50",
+              )}
+            >
+              <Icon className="h-4 w-4" />
+              {tab.label}
+              <span
+                className={cn(
+                  "rounded-full px-2 py-0.5 text-xs",
+                  activeTab === tab.id ? "bg-white/20" : "bg-gray-100",
+                )}
+              >
+                {count}
+              </span>
+            </button>
+          );
+        })}
       </div>
 
       {message && (
@@ -226,8 +404,81 @@ export function PostsManager({ posts }: PostsManagerProps) {
         </p>
       )}
 
+      {mode === "list" && (
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <p className="text-sm text-gray-500">{tabInfo.description}</p>
+          <div className="flex flex-wrap gap-2">
+            <Button
+              variant="teal"
+              size="sm"
+              onClick={() => openCreate(defaultPlatformForTab)}
+            >
+              <Plus className="h-4 w-4" />
+              {activeTab === "all" ? "İçerik Ekle" : tabInfo.addLabel}
+            </Button>
+            {activeTab === "all" && (
+              <>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => openCreate("ARTICLE")}
+                >
+                  <FileText className="h-4 w-4" />
+                  Blog
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => openCreate("VIDEO")}
+                >
+                  <Video className="h-4 w-4" />
+                  Video
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => openCreate("INSTAGRAM")}
+                >
+                  <Share2 className="h-4 w-4" />
+                  Instagram
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => openCreate("LINKEDIN")}
+                >
+                  <Share2 className="h-4 w-4" />
+                  LinkedIn
+                </Button>
+              </>
+            )}
+            {activeTab === "SOCIAL" && (
+              <>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => openCreate("INSTAGRAM")}
+                >
+                  <Share2 className="h-4 w-4" />
+                  Instagram
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => openCreate("LINKEDIN")}
+                >
+                  <Share2 className="h-4 w-4" />
+                  LinkedIn
+                </Button>
+              </>
+            )}
+          </div>
+        </div>
+      )}
+
       {mode === "create" && (
         <PostForm
+          defaultPlatform={createPlatform}
           onCancel={() => setMode("list")}
           onSuccess={handleSuccess}
         />
@@ -247,86 +498,115 @@ export function PostsManager({ posts }: PostsManagerProps) {
       {mode === "list" && (
         <>
           <Input
-            placeholder="Yazı ara..."
+            placeholder="Başlık veya içerik ara..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="max-w-sm"
           />
 
-          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-            {filtered.map((post) => (
-              <div
-                key={post.id}
-                className="flex flex-col overflow-hidden rounded-xl border border-gray-100 bg-white shadow-sm"
+          {filtered.length === 0 ? (
+            <div className="rounded-xl border border-dashed border-gray-200 py-16 text-center">
+              <p className="text-gray-500">Bu kategoride içerik yok.</p>
+              <Button
+                variant="teal"
+                size="sm"
+                className="mt-4"
+                onClick={() => openCreate(defaultPlatformForTab)}
               >
-                <div className="relative aspect-[16/10] shrink-0">
-                  <Image
-                    src={getPostImage(post.imageUrl)}
-                    alt={post.title}
-                    fill
-                    className="object-cover"
-                    unoptimized={post.imageUrl?.startsWith("http")}
-                  />
-                  <div className="absolute left-3 top-3">
-                    <Badge variant="article">Blog</Badge>
-                  </div>
-                </div>
-                <div className="flex flex-1 flex-col p-4">
-                  <p className="line-clamp-2 font-semibold text-gray-800">
-                    {post.title}
-                  </p>
-                  <p className="mt-2 line-clamp-3 flex-1 text-sm text-gray-500">
-                    {plainExcerpt(post.content, 100)}
-                  </p>
-                  <p className="mt-2 text-xs text-gray-400">
-                    {post.createdAt.toLocaleDateString("tr-TR")}
-                    {!post.published && " · Taslak"}
-                  </p>
-                  <div className="mt-4 flex gap-1 border-t border-gray-50 pt-3">
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={() => {
-                        setEditingPost(post);
-                        setMode("edit");
-                      }}
-                    >
-                      <Pencil className="h-3.5 w-3.5" />
-                      Düzenle
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      disabled={pending}
-                      onClick={() =>
-                        startTransition(async () => {
-                          await togglePostPublished(post.id, !post.published);
-                        })
-                      }
-                    >
-                      {post.published ? (
-                        <EyeOff className="h-3.5 w-3.5" />
-                      ) : (
-                        <Eye className="h-3.5 w-3.5" />
+                <Plus className="h-4 w-4" />
+                {tabInfo.addLabel}
+              </Button>
+            </div>
+          ) : (
+            <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+              {filtered.map((post) => {
+                const meta = platformMeta[post.platform];
+                const thumb =
+                  post.imageUrl ||
+                  (post.platform === "VIDEO"
+                    ? getYouTubeThumbnail(post.externalUrl)
+                    : null);
+
+                return (
+                  <div
+                    key={post.id}
+                    className="flex flex-col overflow-hidden rounded-xl border border-gray-100 bg-white shadow-sm"
+                  >
+                    <div className="relative aspect-[16/10] shrink-0">
+                      <Image
+                        src={getPostImage(thumb)}
+                        alt={post.title}
+                        fill
+                        className="object-cover"
+                        unoptimized={thumb?.startsWith("http")}
+                      />
+                      {post.platform === "VIDEO" && (
+                        <div className="absolute inset-0 flex items-center justify-center bg-black/25">
+                          <Play className="h-10 w-10 text-white" fill="white" />
+                        </div>
                       )}
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="destructive"
-                      disabled={pending}
-                      onClick={() =>
-                        startTransition(async () => {
-                          await deletePost(post.id);
-                        })
-                      }
-                    >
-                      <Trash2 className="h-3.5 w-3.5" />
-                    </Button>
+                      <div className="absolute left-3 top-3">
+                        <Badge variant={meta.variant}>{meta.label}</Badge>
+                      </div>
+                    </div>
+                    <div className="flex flex-1 flex-col p-4">
+                      <p className="line-clamp-2 font-semibold text-gray-800">
+                        {post.title}
+                      </p>
+                      <p className="mt-2 line-clamp-3 flex-1 text-sm text-gray-500">
+                        {plainExcerpt(post.content, 100)}
+                      </p>
+                      <p className="mt-2 text-xs text-gray-400">
+                        {post.createdAt.toLocaleDateString("tr-TR")}
+                        {!post.published && " · Taslak"}
+                      </p>
+                      <div className="mt-4 flex gap-1 border-t border-gray-50 pt-3">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => {
+                            setEditingPost(post);
+                            setMode("edit");
+                          }}
+                        >
+                          <Pencil className="h-3.5 w-3.5" />
+                          Düzenle
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          disabled={pending}
+                          onClick={() =>
+                            startTransition(async () => {
+                              await togglePostPublished(post.id, !post.published);
+                            })
+                          }
+                        >
+                          {post.published ? (
+                            <EyeOff className="h-3.5 w-3.5" />
+                          ) : (
+                            <Eye className="h-3.5 w-3.5" />
+                          )}
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="destructive"
+                          disabled={pending}
+                          onClick={() =>
+                            startTransition(async () => {
+                              await deletePost(post.id);
+                            })
+                          }
+                        >
+                          <Trash2 className="h-3.5 w-3.5" />
+                        </Button>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </div>
-            ))}
-          </div>
+                );
+              })}
+            </div>
+          )}
         </>
       )}
     </div>

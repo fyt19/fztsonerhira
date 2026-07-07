@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { motion, useReducedMotion } from "framer-motion";
 import { Activity, Clock } from "lucide-react";
-import { HeroImageSlider } from "@/components/sections/HeroImageSlider";
+import { HeroImage } from "@/components/sections/HeroImage";
 import { useSiteConfig } from "@/components/providers/SiteConfigProvider";
 
 export function Hero() {
@@ -103,7 +103,7 @@ export function Hero() {
           className="relative mx-auto w-full max-w-md lg:max-w-none"
         >
           {/* Main portrait slider */}
-          <HeroImageSlider />
+          <HeroImage />
 
           {/* Floating — recovery rate */}
           <motion.div

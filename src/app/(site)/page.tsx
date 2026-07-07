@@ -6,23 +6,23 @@ import { Trust } from "@/components/sections/Trust";
 import { ServiceShowcase } from "@/components/sections/ServiceShowcase";
 import { Contact } from "@/components/sections/Contact";
 import { PostFeed } from "@/components/social/PostCard";
+import { HomeFaqJsonLd } from "@/components/seo/JsonLd";
+import { SeoContentBlock } from "@/components/seo/SeoContentBlock";
 import { AnimateOnScroll } from "@/components/ui/AnimateOnScroll";
 import { Button } from "@/components/ui/button";
 import { getPosts } from "@/actions/posts";
-import { aboutBio, siteConfig } from "@/lib/constants";
+import { aboutBio } from "@/lib/constants";
+import { homeMetadata } from "@/lib/seo";
 import { images } from "@/lib/images";
 
-export const metadata: Metadata = {
-  title: siteConfig.title,
-  description: siteConfig.description,
-  alternates: { canonical: siteConfig.url },
-};
+export const metadata: Metadata = homeMetadata;
 
 export default async function HomePage() {
   const latestPosts = await getPosts(3);
 
   return (
     <main id="main-content">
+      <HomeFaqJsonLd />
       <Hero />
       <ServiceShowcase />
       <Trust />
@@ -140,6 +140,8 @@ export default async function HomePage() {
           </Button>
         </div>
       </section>
+
+      <SeoContentBlock />
 
       <Contact />
     </main>

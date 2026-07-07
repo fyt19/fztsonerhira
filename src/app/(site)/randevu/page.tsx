@@ -1,14 +1,9 @@
 import type { Metadata } from "next";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { BookingWizard } from "@/components/booking/BookingWizard";
-import { siteConfig } from "@/lib/constants";
+import { bookingMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Randevu Al",
-  description:
-    "Online randevu sistemi ile kolayca randevu alın. Ortopedi, nöroloji, pediatri ve manuel terapi hizmetleri.",
-  alternates: { canonical: `${siteConfig.url}/randevu` },
-};
+export const metadata: Metadata = bookingMetadata;
 
 export default function BookingPage() {
   return (

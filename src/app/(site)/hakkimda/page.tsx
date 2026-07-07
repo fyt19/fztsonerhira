@@ -8,18 +8,16 @@ import {
   Stethoscope,
   Hand,
   ArrowRight,
+  Target,
+  Eye,
 } from "lucide-react";
 import { AnimateOnScroll } from "@/components/ui/AnimateOnScroll";
 import { Button } from "@/components/ui/button";
-import { siteConfig } from "@/lib/constants";
 import { getSiteContent } from "@/lib/site-content";
+import { aboutMetadata } from "@/lib/seo";
 import { images } from "@/lib/images";
 
-export const metadata: Metadata = {
-  title: "Hakkımda",
-  description: `${siteConfig.name} hakkında — İzmir Üniversitesi mezunu fizyoterapist, ortopedi, nöroloji, pediatri ve manuel terapi uzmanı.`,
-  alternates: { canonical: `${siteConfig.url}/hakkimda` },
-};
+export const metadata: Metadata = aboutMetadata;
 
 const credentials = [
   {
@@ -54,6 +52,21 @@ const highlights = [
   },
 ];
 
+const missionVision = [
+  {
+    icon: Target,
+    title: "Misyonumuz",
+    description:
+      "Danışanlarımızın hareket özgürlüğünü ve yaşam kalitesini artırmak için güvenilir, bilimsel ve kişiye özel fizik tedavi hizmetleri sunmak. Her tedaviyi etik değerlere bağlı kalarak, şeffaf iletişimle ve danışan odaklı bir yaklaşımla yürütmek.",
+  },
+  {
+    icon: Eye,
+    title: "Vizyonumuz",
+    description:
+      "Ankara'da fizyoterapi alanında güvenilen ve öncü bir klinik olmak; evde ve klinik ortamda erişilebilir rehabilitasyon hizmetleriyle herkesin sağlıklı hareket etmesine katkı sağlamak ve sürekli gelişen bilimsel yaklaşımlarla en yüksek standartlarda bakım sunmak.",
+  },
+];
+
 export default async function AboutPage() {
   const config = await getSiteContent();
 
@@ -73,9 +86,9 @@ export default async function AboutPage() {
               Hakkımda
             </p>
             <h1 className="font-serif text-4xl font-semibold tracking-tight text-gray-900 sm:text-5xl">
-              {config.name}
+              Fizyoterapist {config.name}
             </h1>
-            <p className="mt-4 max-w-2xl text-lg text-gray-600">
+            <p className="mt-4 max-w-2xl text-xl font-medium text-gray-700">
               Güvenilir, profesyonel ve etik standartlara uygun fizik tedavi
               hizmeti.
             </p>
@@ -126,8 +139,8 @@ export default async function AboutPage() {
             {/* Right — bio & highlights */}
             <AnimateOnScroll className="lg:col-span-7" delay={0.1}>
               <article className="rounded-3xl border border-gray-100 bg-white p-8 shadow-sm lg:p-10">
-                <p className="text-lg leading-[1.85] text-gray-700">
-                  <span className="float-left mr-3 mt-1 font-serif text-5xl font-semibold leading-none text-primary">
+                <p className="text-xl font-medium leading-[1.9] text-gray-800 sm:text-[1.35rem] sm:leading-[1.95]">
+                  <span className="float-left mr-4 mt-1 font-serif text-6xl font-bold leading-none text-primary sm:text-7xl">
                     B
                   </span>
                   {config.aboutBio.slice(1)}
@@ -144,10 +157,10 @@ export default async function AboutPage() {
                           <item.icon className="h-5 w-5" aria-hidden="true" />
                         </span>
                         <div>
-                          <h2 className="font-serif text-xl font-semibold text-gray-800">
+                          <h2 className="font-serif text-2xl font-bold text-gray-900">
                             {item.title}
                           </h2>
-                          <p className="mt-2 leading-relaxed text-gray-600">
+                          <p className="mt-3 text-lg font-medium leading-relaxed text-gray-700">
                             {item.description}
                           </p>
                         </div>
@@ -157,7 +170,7 @@ export default async function AboutPage() {
                 </div>
 
                 <div className="mt-10 flex flex-col gap-4 border-t border-gray-100 pt-8 sm:flex-row sm:items-center sm:justify-between">
-                  <p className="text-sm text-gray-600">
+                  <p className="text-base font-medium text-gray-700">
                     Randevu için hemen iletişime geçin.
                   </p>
                   <Button asChild variant="teal" size="lg" className="rounded-xl">
@@ -173,6 +186,47 @@ export default async function AboutPage() {
         </div>
       </section>
 
+      {/* Mission & Vision */}
+      <section className="relative overflow-hidden bg-gradient-to-br from-primary-light/60 via-white to-accent-soft/30 py-20 lg:py-24">
+        <div className="pointer-events-none absolute inset-0" aria-hidden="true">
+          <div className="absolute -left-20 top-0 h-64 w-64 rounded-full bg-primary/10 blur-[80px]" />
+          <div className="absolute -right-16 bottom-0 h-72 w-72 rounded-full bg-secondary/10 blur-[90px]" />
+        </div>
+
+        <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
+          <AnimateOnScroll className="mx-auto max-w-2xl text-center">
+            <p className="text-sm font-semibold uppercase tracking-widest text-primary">
+              Değerlerimiz
+            </p>
+            <h2 className="mt-3 font-serif text-3xl font-semibold text-gray-900 sm:text-4xl">
+              Misyon & Vizyon
+            </h2>
+            <p className="mt-4 text-lg font-medium text-gray-700">
+              Hareket özgürlüğü ve yaşam kalitesi odaklı yaklaşımımızın temeli.
+            </p>
+          </AnimateOnScroll>
+
+          <div className="mt-12 grid gap-8 lg:grid-cols-2">
+            {missionVision.map((item, index) => (
+              <AnimateOnScroll key={item.title} delay={index * 0.1}>
+                <article className="relative h-full overflow-hidden rounded-3xl border border-white/80 bg-white/90 p-8 shadow-[0_20px_50px_-20px_rgba(43,124,184,0.2)] backdrop-blur-sm lg:p-10">
+                  <div className="absolute right-0 top-0 h-32 w-32 translate-x-8 -translate-y-8 rounded-full bg-primary/5" aria-hidden="true" />
+                  <span className="inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-primary to-secondary text-white shadow-lg shadow-primary/25">
+                    <item.icon className="h-7 w-7" aria-hidden="true" />
+                  </span>
+                  <h3 className="mt-6 font-serif text-2xl font-bold text-gray-900">
+                    {item.title}
+                  </h3>
+                  <p className="mt-4 text-lg font-medium leading-relaxed text-gray-700">
+                    {item.description}
+                  </p>
+                </article>
+              </AnimateOnScroll>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Bottom CTA band */}
       <section className="bg-primary-dark py-16">
         <div className="mx-auto max-w-7xl px-6 text-center lg:px-8">
@@ -180,7 +234,7 @@ export default async function AboutPage() {
             Sağlığınız için doğru adımı atın
           </h2>
           <p className="mx-auto mt-3 max-w-xl text-primary-light/90">
-            Ankara&apos;da ortopedi, nöroloji, pediatri ve manuel terapi
+            Ankara&apos;da ortopedi, nöroloji, pediatri, evde fizyoterapi ve manuel terapi
             alanlarında kişiye özel tedavi planları.
           </p>
           <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">

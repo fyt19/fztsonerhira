@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import { Inter, Playfair_Display } from "next/font/google";
+import { Inter, Playfair_Display, Caveat } from "next/font/google";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { siteConfig } from "@/lib/constants";
-import { getAllLocalKeywords } from "@/lib/local-seo";
+import { getGlobalKeywords } from "@/lib/seo";
 import { images } from "@/lib/images";
 import "./globals.css";
 
@@ -18,39 +18,57 @@ const playfair = Playfair_Display({
   display: "swap",
 });
 
+const caveat = Caveat({
+  variable: "--font-caveat",
+  subsets: ["latin", "latin-ext"],
+  display: "swap",
+});
+
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
   title: {
     default: siteConfig.title,
-    template: `%s | ${siteConfig.name}`,
+    template: `%s | Fizyoterapist Soner Hıra`,
   },
   description: siteConfig.description,
-  keywords: [
-    "ankara fizyoterapist",
-    "fizyoterapist ankara",
-    "çukurambar fizyoterapist",
-    "çankaya fizyoterapist",
-    "keçiören fizyoterapist",
-    "ayaş fizyoterapist",
-    "ankara fizik tedavi",
-    "ankara manuel terapi",
-    "ankara rehabilitasyon",
-    "fizik tedavi",
-    "manuel terapi",
-    "Soner Hıra",
-    ...getAllLocalKeywords().slice(0, 20),
-  ],
-  authors: [{ name: siteConfig.name }],
+  keywords: getGlobalKeywords(),
+  authors: [{ name: siteConfig.name, url: siteConfig.url }],
+  creator: siteConfig.name,
+  publisher: siteConfig.name,
+  category: "health",
   openGraph: {
     type: "website",
     locale: siteConfig.locale,
     url: siteConfig.url,
-    siteName: siteConfig.name,
+    siteName: `Fizyoterapist ${siteConfig.name}`,
     title: siteConfig.title,
     description: siteConfig.description,
-    images: [{ url: images.og, width: 1200, height: 630 }],
+    images: [{ url: images.og, width: 1200, height: 630, alt: siteConfig.title }],
   },
-  robots: { index: true, follow: true },
+  twitter: {
+    card: "summary_large_image",
+    title: siteConfig.title,
+    description: siteConfig.description,
+    images: [images.og],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
+  },
+  ...(process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION
+    ? {
+        verification: {
+          google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION,
+        },
+      }
+    : {}),
 };
 
 export default function RootLayout({
@@ -59,7 +77,7 @@ export default function RootLayout({
   return (
     <html
       lang={siteConfig.language}
-      className={`${inter.variable} ${playfair.variable} scroll-smooth`}
+      className={`${inter.variable} ${playfair.variable} ${caveat.variable} scroll-smooth`}
       data-scroll-behavior="smooth"
       suppressHydrationWarning
     >

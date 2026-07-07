@@ -20,7 +20,7 @@ const navItems = [
     label: "Randevular",
     icon: Calendar,
   },
-  { href: "/admin/dashboard/posts", label: "Blog Yönetimi", icon: FileText },
+  { href: "/admin/dashboard/posts", label: "İçerik Yönetimi", icon: FileText },
   { href: "/admin/dashboard/settings", label: "Site İçeriği", icon: Settings },
 ];
 

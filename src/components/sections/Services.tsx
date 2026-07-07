@@ -7,6 +7,7 @@ import {
   Baby,
   HeartPulse,
   Hand,
+  Home,
   ArrowUpRight,
 } from "lucide-react";
 import { motion } from "framer-motion";
@@ -19,6 +20,7 @@ const iconMap = {
   brain: Brain,
   baby: Baby,
   "heart-pulse": HeartPulse,
+  home: Home,
   hand: Hand,
 };
 

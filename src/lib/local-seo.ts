@@ -283,7 +283,7 @@ export function getAreaBySlug(slug: string): LocalArea | undefined {
 }
 
 export function getAreaTitle(area: LocalArea): string {
-  return `${area.name} Fizyoterapist`;
+  return `${area.name} Fizyoterapist Soner Hıra`;
 }
 
 export function getAreaMetaDescription(area: LocalArea): string {
@@ -291,19 +291,21 @@ export function getAreaMetaDescription(area: LocalArea): string {
     area.type === "mahalle" && area.parentIlce
       ? `${area.name}, ${area.parentIlce}`
       : area.name;
-  return `${location} fizyoterapist Soner Hıra — ortopedi, manuel terapi, nörolojik ve pediatrik rehabilitasyon. Ankara'da güvenilir fizik tedavi. Randevu alın.`;
+  return `Fizyoterapist Soner Hıra — ${location} fizyoterapist. Ortopedi, manuel terapi, nörolojik ve pediatrik rehabilitasyon. Ankara'da güvenilir fizik tedavi. Randevu: +90 533 290 58 29.`;
 }
 
 export function getAreaKeywords(area: LocalArea): string[] {
   const base = [
+    `fizyoterapist soner hıra ${area.name.toLowerCase()}`,
+    `${area.name.toLowerCase()} fizyoterapist soner hıra`,
     `${area.name.toLowerCase()} fizyoterapist`,
     `${area.name.toLowerCase()} fizik tedavi`,
     `${area.name.toLowerCase()} rehabilitasyon`,
     `${area.name.toLowerCase()} manuel terapi`,
     `ankara ${area.name.toLowerCase()} fizyoterapist`,
+    "fizyoterapist soner hıra",
+    "soner hıra fizyoterapist",
     "ankara fizyoterapist",
-    "soner hıra",
-    "fizyoterapist ankara",
   ];
   if (area.parentIlce) {
     base.push(
@@ -317,6 +319,14 @@ export function getAreaKeywords(area: LocalArea): string[] {
 /** Tüm yerel SEO anahtar kelimeleri (root metadata için) */
 export function getAllLocalKeywords(): string[] {
   return ankaraAreas.flatMap((a) => getAreaKeywords(a).slice(0, 3));
+}
+
+export function getIlceAreas(): LocalArea[] {
+  return ankaraAreas.filter((a) => a.type === "ilce");
+}
+
+export function getMahalleAreas(): LocalArea[] {
+  return ankaraAreas.filter((a) => a.type === "mahalle");
 }
 
 export function generateAreaSlugs(): string[] {

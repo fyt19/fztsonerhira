@@ -6,19 +6,19 @@ const u = (id: string, w = 1200) =>
   `https://images.unsplash.com/${id}?w=${w}&q=80&auto=format&fit=crop`;
 
 export const images = {
-  /** Ana sayfa hero / slider görselleri */
-  hero: "/images/slider-soner.png",
-  slider: "/images/slider-soner.png",
-  sliderAlt: "/images/slider.png",
-  portrait: "/images/slider-soner.png",
+  /** Ana sayfa hero / slider görseli */
+  hero: "/images/slider.jpeg",
+  slider: "/images/slider.jpeg",
+  portrait: "/images/slider.jpeg",
   clinic: u("photo-1519494024563-4f70378a4fd2", 1600),
   blogDefault: u("photo-1576091160399-112ba8d25d1d", 1200),
-  og: "/images/slider-soner.png",
+  og: "/images/slider.jpeg",
   services: {
     ortopedik: u("photo-1599058917765-a780eda07a93", 1000),
     norolojik: u("photo-1559757148-5c350d0d3c56", 1000),
     pediatrik: u("photo-1503454537195-1dcabb73ffb9", 1000),
-    "yogun-bakim": u("photo-1582719471384-894fbb16e074", 1000),
+    "yogun-bakim": u("photo-1579684385127-1ef15a50893", 1000),
+    "evde-fizyoterapi": u("photo-1586773865888-76d01f958963", 1000),
     "manuel-terapi": u("photo-1544161515-4ab6ce6db874", 1000),
   },
   trust: {
@@ -27,17 +27,6 @@ export const images = {
     etik: u("photo-1582750431439-352cc7478e3e", 800),
   },
 } as const;
-
-export const heroSlides = [
-  {
-    src: "/images/slider-soner.png",
-    alt: "Soner Hıra — Fizyoterapist",
-  },
-  {
-    src: "/images/slider.png",
-    alt: "Soner Hıra — Klinik portre",
-  },
-] as const;
 
 export function getServiceImage(serviceId: string): string {
   return (

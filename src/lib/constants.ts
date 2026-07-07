@@ -1,8 +1,8 @@
 export const siteConfig = {
   name: "Soner Hıra",
-  title: "Soner Hıra | Ankara Fizyoterapist",
+  title: "Fizyoterapist Soner Hıra | Ankara Fizik Tedavi & Manuel Terapi",
   description:
-    "Ankara'da ortopedi, nöroloji, pediatri ve manuel terapi alanlarında uzman fizyoterapist Soner Hıra. Çankaya, Keçiören, Çukurambar ve tüm Ankara ilçelerinde güvenilir fizik tedavi hizmeti.",
+    "Fizyoterapist Soner Hıra — Ankara'da ortopedi, nöroloji, pediatri, evde fizyoterapi ve manuel terapi. Çukurambar, Çankaya, Keçiören ve tüm Ankara ilçelerinde güvenilir fizik tedavi hizmeti.",
   url: "https://sonerhira.com",
   locale: "tr_TR",
   language: "tr",
@@ -88,6 +88,13 @@ export const services = [
     description:
       "Yoğun bakım sürecinden sonra solunum, mobilite ve günlük yaşam aktivitelerine dönüş için kapsamlı rehabilitasyon desteği.",
     icon: "heart-pulse" as const,
+  },
+  {
+    id: "evde-fizyoterapi",
+    title: "Evde Fizyoterapi",
+    description:
+      "Hastane veya kliniğe gidemeyen danışanlar için ev ortamında, kişiye özel fizik tedavi ve rehabilitasyon hizmeti.",
+    icon: "home" as const,
   },
   {
     id: "manuel-terapi",

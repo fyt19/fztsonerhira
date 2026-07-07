@@ -6,14 +6,16 @@ import { getPostById, getPosts } from "@/actions/posts";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { getPostImage } from "@/lib/images";
-import { siteConfig } from "@/lib/constants";
+import {
+  getYouTubeEmbedUrl,
+  getYouTubeThumbnail,
+  isSocialPlatform,
+  platformMeta,
+} from "@/lib/post-platforms";
+import { buildPageMetadata } from "@/lib/seo";
+import { cn } from "@/lib/utils";
 
-const platformConfig = {
-  INSTAGRAM: { label: "Instagram", variant: "instagram" as const },
-  LINKEDIN: { label: "LinkedIn", variant: "linkedin" as const },
-  ARTICLE: { label: "Blog", variant: "article" as const },
-  GENERAL: { label: "Haber", variant: "teal" as const },
-};
+const platformConfig = platformMeta;
 
 type Props = { params: Promise<{ id: string }> };
 
@@ -29,14 +31,17 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     .trim();
 
   return {
-    title: post.title,
-    description: plainDescription.slice(0, 160),
+    ...buildPageMetadata({
+      title: `${post.title} | Fizyoterapist Soner Hıra`,
+      description: plainDescription.slice(0, 160),
+      path: `/blog/${id}`,
+      keywords: ["fizyoterapist soner hıra", "ankara fizyoterapist", post.title],
+    }),
     openGraph: {
       title: post.title,
       description: plainDescription.slice(0, 160),
       images: [{ url: getPostImage(post.imageUrl) }],
     },
-    alternates: { canonical: `${siteConfig.url}/blog/${id}` },
   };
 }
 
@@ -48,23 +53,40 @@ export default async function BlogPostPage({ params }: Props) {
 
   const related = (await getPosts(4)).filter((p) => p.id !== post.id).slice(0, 3);
   const platform = platformConfig[post.platform];
+  const isSocial = isSocialPlatform(post.platform);
+  const videoEmbed = getYouTubeEmbedUrl(post.externalUrl);
+  const coverImage = getPostImage(
+    post.imageUrl ||
+      (post.platform === "VIDEO" ? getYouTubeThumbnail(post.externalUrl) : null),
+  );
 
   return (
     <main id="main-content" className="pt-28">
       <article className="pb-20">
-        {/* Hero image */}
         <div className="relative mx-auto max-w-5xl px-6 lg:px-8">
-          <div className="relative aspect-[21/9] overflow-hidden rounded-3xl shadow-xl ring-1 ring-slate-200/80">
-            <Image
-              src={getPostImage(post.imageUrl)}
-              alt={post.title}
-              fill
-              priority
-              sizes="90vw"
-              className="object-cover"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-navy-900/60 to-transparent" />
-          </div>
+          {videoEmbed ? (
+            <div className="relative aspect-video overflow-hidden rounded-3xl shadow-xl ring-1 ring-slate-200/80">
+              <iframe
+                src={videoEmbed}
+                title={post.title}
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                className="absolute inset-0 h-full w-full"
+              />
+            </div>
+          ) : (
+            <div className="relative aspect-[21/9] overflow-hidden rounded-3xl shadow-xl ring-1 ring-slate-200/80">
+              <Image
+                src={coverImage}
+                alt={post.title}
+                fill
+                priority
+                sizes="90vw"
+                className="object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-navy-900/60 to-transparent" />
+            </div>
+          )}
         </div>
 
         <div className="mx-auto mt-10 max-w-3xl px-6 lg:px-8">
@@ -86,6 +108,36 @@ export default async function BlogPostPage({ params }: Props) {
           <h1 className="mt-6 font-serif text-3xl font-semibold leading-tight text-navy-900 sm:text-4xl lg:text-5xl">
             {post.title}
           </h1>
+
+          {isSocial && post.externalUrl && (
+            <div
+              className={cn(
+                "mt-8 flex flex-col gap-4 rounded-2xl p-6 sm:flex-row sm:items-center sm:justify-between",
+                post.platform === "INSTAGRAM"
+                  ? "bg-gradient-to-r from-purple-50 to-pink-50 ring-1 ring-pink-100"
+                  : "bg-blue-50 ring-1 ring-blue-100",
+              )}
+            >
+              <div>
+                <p className="text-sm font-semibold uppercase tracking-wider text-gray-500">
+                  Sosyal Medya Paylaşımı
+                </p>
+                <p className="mt-1 text-base text-gray-700">
+                  Bu içeriğin tamamını {platform.label}&apos;da görüntüleyebilirsiniz.
+                </p>
+              </div>
+              <Button asChild variant={post.platform === "INSTAGRAM" ? "default" : "teal"}>
+                <a
+                  href={post.externalUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="shrink-0"
+                >
+                  {platform.socialLabel ?? `${platform.label}'da Gör`} →
+                </a>
+              </Button>
+            </div>
+          )}
 
           <div className="mt-10 space-y-6 text-lg leading-relaxed text-slate-700">
             {post.content.split("\n\n").map((block, i) => {
@@ -119,7 +171,7 @@ export default async function BlogPostPage({ params }: Props) {
             })}
           </div>
 
-          {post.externalUrl && (
+          {post.externalUrl && !videoEmbed && !isSocial && (
             <div className="mt-10">
               <Button asChild variant="teal">
                 <a

@@ -19,6 +19,8 @@ enum PostPlatform {
   INSTAGRAM
   LINKEDIN
   ARTICLE
+  VIDEO
+  CONTENT
   GENERAL
 }
 

@@ -3,7 +3,7 @@ import { getAllPosts } from "@/actions/posts";
 import { PostsManager } from "@/components/admin/PostsManager";
 
 export const metadata: Metadata = {
-  title: "Sosyal Paylaşımlar",
+  title: "İçerik Yönetimi",
   robots: { index: false, follow: false },
 };
 
