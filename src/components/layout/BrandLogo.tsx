@@ -17,11 +17,18 @@ export function BrandLogo({
   const isLight = variant === "light";
 
   const content = (
-    <span className={cn("group inline-flex flex-col leading-none", className)}>
+    <span
+      className={cn(
+        "group inline-flex items-baseline gap-2 leading-none",
+        className,
+      )}
+    >
       <span
         className={cn(
-          "mb-0.5 bg-gradient-to-r from-primary via-secondary to-primary bg-clip-text text-[0.65rem] font-bold uppercase tracking-[0.28em] text-transparent sm:text-[0.7rem]",
-          isLight && "from-accent-soft via-white to-accent-soft",
+          "font-script text-[1.5rem] font-semibold sm:text-[1.7rem]",
+          isLight
+            ? "bg-gradient-to-r from-accent-soft via-white to-secondary bg-clip-text text-transparent"
+            : "bg-gradient-to-r from-primary via-secondary to-primary bg-clip-text text-transparent",
         )}
       >
         Fizyoterapist
@@ -29,7 +36,7 @@ export function BrandLogo({
       <span className="relative inline-block">
         <span
           className={cn(
-            "font-script text-[1.65rem] font-semibold tracking-tight sm:text-[1.85rem]",
+            "font-script text-[1.5rem] font-semibold tracking-tight sm:text-[1.7rem]",
             isLight ? "text-white" : "text-gray-900",
           )}
         >
@@ -37,7 +44,7 @@ export function BrandLogo({
         </span>
         <span
           className={cn(
-            "absolute -bottom-1 left-0 h-[2px] w-full origin-left scale-x-0 rounded-full bg-gradient-to-r from-primary via-secondary to-accent transition-transform duration-300 group-hover:scale-x-100",
+            "absolute -bottom-0.5 left-0 h-[2px] w-full origin-left scale-x-0 rounded-full bg-gradient-to-r from-primary via-secondary to-accent transition-transform duration-300 group-hover:scale-x-100",
             isLight && "from-accent-soft via-white to-accent-soft",
           )}
           aria-hidden="true"
