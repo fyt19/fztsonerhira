@@ -43,7 +43,9 @@ export function ServiceShowcase() {
           whileInView="visible"
           viewport={{ once: true, margin: "-40px" }}
         >
-          {services.map((service, index) => (
+          {services.map((service, index) => {
+            const cover = getServiceImage(service.id);
+            return (
             <motion.article
               key={service.id}
               variants={fadeInUp}
@@ -52,10 +54,11 @@ export function ServiceShowcase() {
               <Link href="/hizmetlerimiz" className="block">
                 <div className="relative aspect-[4/3] overflow-hidden">
                   <Image
-                    src={getServiceImage(service.id)}
+                    src={cover}
                     alt={service.title}
                     fill
                     sizes="(max-width: 768px) 100vw, 33vw"
+                    unoptimized={cover.endsWith(".svg")}
                     className="object-cover transition-transform duration-700 ease-out group-hover:scale-110"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-navy-900/80 via-navy-900/20 to-transparent" />
@@ -78,7 +81,8 @@ export function ServiceShowcase() {
                 0{index + 1}
               </motion.div>
             </motion.article>
-          ))}
+          );
+          })}
         </motion.div>
 
         <motion.div

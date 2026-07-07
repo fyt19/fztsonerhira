@@ -66,6 +66,7 @@ export function Trust() {
                   alt={value.title}
                   fill
                   sizes="33vw"
+                  unoptimized={trustImages[index].endsWith(".svg")}
                   className="object-cover transition-transform duration-700 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-navy-900 via-navy-900/40 to-transparent" />

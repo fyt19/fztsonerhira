@@ -14,6 +14,8 @@ export function HeroImage() {
         alt={`${config.name} — Fizyoterapist`}
         fill
         priority
+        loading="eager"
+        fetchPriority="high"
         sizes="(max-width: 1024px) 90vw, 45vw"
         className="object-cover object-center"
       />

@@ -39,6 +39,7 @@ export default function ServicesPage() {
           <div className="space-y-12">
             {services.map((service, index) => {
               const isEven = index % 2 === 0;
+              const cover = getServiceImage(service.id);
 
               return (
                 <AnimateOnScroll key={service.id} delay={index * 0.08}>
@@ -53,10 +54,11 @@ export default function ServicesPage() {
                       }`}
                     >
                       <Image
-                        src={getServiceImage(service.id)}
+                        src={cover}
                         alt={service.title}
                         fill
                         sizes="50vw"
+                        unoptimized={cover.endsWith(".svg")}
                         className="object-cover"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-navy-900/50 to-transparent lg:bg-gradient-to-r lg:from-transparent lg:to-navy-900/20" />
