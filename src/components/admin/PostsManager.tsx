@@ -23,6 +23,7 @@ import {
   togglePostPublished,
   updatePost,
 } from "@/actions/posts";
+import { uploadImage } from "@/actions/upload";
 import { getPostImage } from "@/lib/images";
 import {
   contentTabs,
@@ -70,6 +71,7 @@ function PostForm({
   onSuccess: (msg: string) => void;
 }) {
   const [pending, startTransition] = useTransition();
+  const [uploading, setUploading] = useState(false);
   const [platform, setPlatform] = useState<PostPlatform>(
     initial?.platform ?? defaultPlatform ?? "ARTICLE",
   );
@@ -91,6 +93,23 @@ function PostForm({
     setVideoUrl(url);
     const thumb = getYouTubeThumbnail(url);
     if (thumb && !imageUrl) setImageUrl(thumb);
+  };
+
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploading(true);
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const result = await uploadImage(formData);
+    if (result.success && result.url) {
+      setImageUrl(result.url);
+    } else {
+      alert(result.error || "Yükleme hatası");
+    }
+    setUploading(false);
   };
 
   const formTitle = initial
@@ -255,16 +274,28 @@ function PostForm({
             <div className="space-y-4">
               <div>
                 <Label htmlFor="imageUrl">
-                  {isVideo ? "Kapak Görseli (isteğe bağlı)" : "Görsel URL"}
+                  {isVideo ? "Kapak Görseli (isteğe bağlı)" : "Görsel URL veya Yükle"}
                 </Label>
-                <Input
-                  id="imageUrl"
-                  type="url"
-                  value={imageUrl}
-                  onChange={(e) => setImageUrl(e.target.value)}
-                  placeholder="https://..."
-                  className="mt-1.5"
-                />
+                <div className="mt-1.5 flex items-center gap-2">
+                  <Input
+                    id="imageUrl"
+                    type="url"
+                    value={imageUrl}
+                    onChange={(e) => setImageUrl(e.target.value)}
+                    placeholder="https://..."
+                    className="flex-1"
+                  />
+                  <div className="relative flex h-10 shrink-0 cursor-pointer items-center justify-center rounded-md border border-input bg-background px-3 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleFileUpload}
+                      disabled={uploading}
+                      className="absolute inset-0 cursor-pointer opacity-0 disabled:cursor-not-allowed"
+                    />
+                    {uploading ? "..." : "Seç"}
+                  </div>
+                </div>
               </div>
               {!isVideo && !isSocial && (
                 <div>

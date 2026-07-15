@@ -3,7 +3,7 @@ export const siteConfig = {
   title: "Fizyoterapist Soner Hıra | Ankara Fizik Tedavi & Manuel Terapi",
   description:
     "Fizyoterapist Soner Hıra — Ankara'da ortopedi, nöroloji, pediatri, evde fizyoterapi ve manuel terapi. Çukurambar, Çankaya, Keçiören ve tüm Ankara ilçelerinde güvenilir fizik tedavi hizmeti.",
-  url: "https://sonerhira.com",
+  url: "https://fztsonerhira.vercel.app",
   locale: "tr_TR",
   language: "tr",
   phone: "+90 533 290 58 29",
