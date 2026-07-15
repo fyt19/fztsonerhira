@@ -7,11 +7,13 @@ import { trustValues } from "@/lib/constants";
 import { images } from "@/lib/images";
 import { staggerContainer, fadeInUp } from "@/lib/animations";
 
-const trustImages = [
-  images.trust.guvenilir,
-  images.trust.profesyonel,
-  images.trust.etik,
-];
+import { ShieldCheck, Award, Scale } from "lucide-react";
+
+const iconMap = {
+  "shield-check": ShieldCheck,
+  award: Award,
+  scale: Scale,
+};
 
 export function Trust() {
   return (
@@ -54,33 +56,29 @@ export function Trust() {
             Temel Değerlerimiz
           </h3>
 
-          {trustValues.map((value, index) => (
-            <motion.article
-              key={value.title}
-              variants={fadeInUp}
-              className="group overflow-hidden rounded-3xl border border-white/10 bg-white/5 backdrop-blur-sm transition-all hover:border-teal-400/30 hover:shadow-2xl hover:shadow-teal-900/20"
-            >
-              <div className="relative aspect-[16/10] overflow-hidden">
-                <Image
-                  src={trustImages[index]}
-                  alt={value.title}
-                  fill
-                  sizes="33vw"
-                  unoptimized={trustImages[index].endsWith(".svg")}
-                  className="object-cover transition-transform duration-700 group-hover:scale-105"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-navy-900 via-navy-900/40 to-transparent" />
-              </div>
-              <div className="p-6 text-center">
-                <h4 className="font-serif text-xl font-semibold text-white">
-                  {value.title}
-                </h4>
-                <p className="mt-3 text-sm leading-relaxed text-slate-300">
-                  {value.description}
-                </p>
-              </div>
-            </motion.article>
-          ))}
+          {trustValues.map((value) => {
+            const Icon = iconMap[value.icon as keyof typeof iconMap];
+            
+            return (
+              <motion.article
+                key={value.title}
+                variants={fadeInUp}
+                className="group overflow-hidden rounded-3xl border border-white/10 bg-white/5 p-8 backdrop-blur-sm transition-all hover:border-teal-400/30 hover:shadow-2xl hover:shadow-teal-900/20"
+              >
+                <div className="flex flex-col items-center text-center">
+                  <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-2xl bg-teal-500/10 text-teal-400 transition-colors group-hover:bg-teal-500/20 group-hover:text-teal-300">
+                    <Icon className="h-10 w-10" />
+                  </div>
+                  <h4 className="font-serif text-xl font-semibold text-white">
+                    {value.title}
+                  </h4>
+                  <p className="mt-3 text-sm leading-relaxed text-slate-300">
+                    {value.description}
+                  </p>
+                </div>
+              </motion.article>
+            );
+          })}
         </motion.div>
       </div>
     </section>
