@@ -13,11 +13,11 @@ export const images = {
   blogDefault: "/images/slider.jpeg",
   og: "/images/slider.jpeg",
   services: {
-    ortopedik: u("photo-1599058917765-a780eda07a93", 1000),
+    ortopedik: u("photo-1576091160550-2173dba999ef", 1000),
     norolojik: u("photo-1559757148-5c350d0d3c56", 1000),
     pediatrik: u("photo-1503454537195-1dcabb73ffb9", 1000),
-    "yogun-bakim": u("photo-1579684385127-1ef15a50893", 1000),
-    "evde-fizyoterapi": u("photo-1586773865888-76d01f958963", 1000),
+    "yogun-bakim": u("photo-1519494026892-80bbd2d6fd0d", 1000),
+    "evde-fizyoterapi": u("photo-1538108149393-fbbd81895907", 1000),
     "manuel-terapi": u("photo-1544161515-4ab6ce6db874", 1000),
   },
   trust: {
